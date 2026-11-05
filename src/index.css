@@ -1,0 +1,474 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@700&family=Space+Grotesk:wght@500;600&display=swap');
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------
+   Airawat design tokens. Source: Design and Brand Guide, Version 2.
+   Five core colours, everything else is a tint, deep step or stop.
+   ------------------------------------------------------------------ */
+@theme {
+  /* Remove Tailwind defaults so only brand values are available. */
+  --color-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --drop-shadow-*: initial;
+  --inset-shadow-*: initial;
+
+  /* Core palette */
+  --color-paper: #f5f3ec;
+  --color-ink: #111111;
+  --color-white: #ffffff;
+  --color-slate: #52769a;
+  --color-slate-deep: #2f4e6d;
+  --color-slate-light: #9bb3cc;
+  --color-rose: #9a5b6a;
+  --color-rose-deep: #7e4554;
+  --color-rose-light: #c99aa2;
+  --color-sage: #96a394;
+  --color-sage-deep: #6f7e70;
+  --color-sage-dark: #4f5d50;
+
+  /* Solid tints (paper mixed with a core colour, no alpha) */
+  --color-slate-tint: #e1e4e2;
+  --color-slate-wash: #d1d8da;
+  --color-rose-tint: #eae1dc;
+  --color-rose-wash: #e1d2cf;
+  --color-sage-tint: #eae9e1;
+  --color-sage-wash: #e0e1d9;
+
+  /* Gradient stops */
+  --color-grad-paper-start: #f8f6ef;
+  --color-grad-paper-end: #eae3d7;
+  --color-grad-ink-end: #2a2a2a;
+  --color-grad-slate-end: #7e9bb8;
+  --color-grad-rose-end: #c48a96;
+  --color-grad-sage-end: #b8c3b9;
+  --color-layer-slate-mid: #6f87a6;
+  --color-layer-rose-mid: #a66d7a;
+  --color-layer-sage-mid: #9aa79b;
+  --color-blueprint-mid: #1f3044;
+  --color-grid-minor: #1d2c3d;
+  --color-grid-major: #2c435c;
+
+  /* Semantic tokens: paper theme (ink values live in .theme-ink) */
+  --color-surface: #f5f3ec;
+  --color-surface-raised: #efeae1;
+  --color-surface-sunken: #eae3d7;
+  --color-text: #111111;
+  --color-text-muted: #615a52;
+  --color-text-label: #2f4e6d;
+  --color-text-accent: #7e4554;
+  --color-rule: #111111;
+  --color-border: #d6cfc3;
+  --color-border-strong: #a99f91;
+  --color-focus: #2f4e6d;
+  --color-action: #111111;
+  --color-on-action: #f5f3ec;
+  --color-brand: #2f4e6d;
+  --color-on-brand: #f5f3ec;
+  --color-hover: #eae3d7;
+  --color-selected: #e1e4e2;
+  --color-figure: #52769a;
+  --color-scrim: rgb(17 17 17 / 0.72); /* screen only, never in print */
+
+  /* Stages: the word is always present */
+  --color-stage-live: #2f4e6d;
+  --color-stage-pilot: #7e4554;
+  --color-stage-prototype: #4f5d50;
+
+  /* Status, mapped onto the palette */
+  --color-info: #2f4e6d;
+  --color-info-tint: #e1e4e2;
+  --color-success: #4f5d50;
+  --color-success-tint: #eae9e1;
+  --color-caution: #9a5b6a;
+  --color-caution-tint: #eae1dc;
+  --color-critical: #7e4554;
+  --color-critical-tint: #e1d2cf;
+
+  /* Four faces, one job each */
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-logo: 'Montserrat', ui-sans-serif, sans-serif;
+
+  /* Radius: square by default */
+  --radius-0: 0px;
+  --radius-pill: 9999px;
+  --radius-round: 9999px;
+
+  /* Motion: quiet, short, no bounce. Disabled under prefers-reduced-motion. */
+  --ease-quiet: cubic-bezier(0.2, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --animate-fade-in: fade-in 240ms var(--ease-quiet) both;
+  --animate-fade-up: fade-up 480ms var(--ease-quiet) both;
+  --animate-pop: pop 160ms var(--ease-quiet) both;
+  --animate-rise: rise 280ms var(--ease-quiet) both;
+  --animate-slide-in-right: slide-in-right 320ms var(--ease-quiet) both;
+  --animate-toast-in: toast-in 280ms var(--ease-quiet) both;
+  --animate-grow-y: grow-y 700ms var(--ease-quiet) both;
+  --animate-grow-x: grow-x 700ms var(--ease-quiet) both;
+  --animate-draw: draw 1100ms var(--ease-quiet) both;
+  --animate-sweep: sweep 900ms var(--ease-quiet) both;
+  --animate-live: live 1.6s ease-in-out infinite;
+  --animate-scan: scan 4s linear infinite;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-indeterminate: indeterminate 1.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(-4px); }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+  }
+  @keyframes slide-in-right {
+    from { transform: translateX(100%); }
+  }
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateX(24px); }
+  }
+  @keyframes grow-y {
+    from { transform: scaleY(0); }
+  }
+  @keyframes grow-x {
+    from { transform: scaleX(0); }
+  }
+  @keyframes draw {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes sweep {
+    from { stroke-dasharray: 0 var(--sweep-c, 1000); }
+  }
+  @keyframes live {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+  @keyframes scan {
+    from { transform: translateY(0); }
+    to { transform: translateY(var(--scan-distance, 200px)); }
+  }
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+  }
+  @keyframes indeterminate {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(250%); }
+  }
+}
+
+/* Ink theme: applied to dark gradient grounds so components adapt. */
+@utility theme-ink {
+  --color-surface: #111111;
+  --color-surface-raised: #1c2a38;
+  --color-surface-sunken: #0b0f14;
+  --color-text: #f5f3ec;
+  --color-text-muted: #c9d6e3;
+  --color-text-label: #9bb3cc;
+  --color-text-accent: #c99aa2;
+  --color-rule: #4a5d72;
+  --color-border: #4a5d72;
+  --color-border-strong: #7e9bb8;
+  --color-focus: #c9d6e3;
+  --color-action: #f5f3ec;
+  --color-on-action: #111111;
+  --color-brand: #9bb3cc;
+  --color-on-brand: #111111;
+  --color-hover: #2a3d51;
+  --color-selected: #2a3d51;
+  --color-figure: #f5f3ec;
+  --color-stage-live: #9bb3cc;
+  --color-stage-pilot: #c99aa2;
+  --color-stage-prototype: #f5f3ec;
+  --color-info: #9bb3cc;
+  --color-info-tint: #212a33;
+  --color-success: #b8c3b9;
+  --color-success-tint: #323632;
+  --color-caution: #c99aa2;
+  --color-caution-tint: #332427;
+  --color-critical: #c99aa2;
+  --color-critical-tint: #4a2c34;
+  color: var(--color-text);
+}
+
+/* ---------------- Type styles ---------------- */
+@utility type-display-xl {
+  font-family: var(--font-display);
+  font-size: 46px;
+  line-height: 1.04;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+@utility type-display-l {
+  font-family: var(--font-display);
+  font-size: 34px;
+  line-height: 1.07;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+@utility type-display-m {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+@utility type-heading {
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+@utility type-figure-xl {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 0.88;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+@utility type-figure-m {
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+@utility type-lead {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+@utility type-body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+@utility type-body-s {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  font-weight: 400;
+}
+@utility type-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+@utility type-caption {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+@utility type-wordmark {
+  font-family: var(--font-logo);
+  font-size: 30px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Outlined figures: transparent fill, 1.5px stroke */
+@utility figure-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--figure-stroke, var(--color-figure));
+}
+
+/* ---------------- Approved gradients only ---------------- */
+@utility bg-grad-paper {
+  background-image: linear-gradient(145deg, var(--color-grad-paper-start), var(--color-grad-paper-end));
+}
+@utility bg-grad-ink {
+  background-image: linear-gradient(145deg, var(--color-ink), var(--color-grad-ink-end));
+}
+@utility bg-grad-slate {
+  background-image: linear-gradient(145deg, var(--color-slate-deep), var(--color-grad-slate-end));
+}
+@utility bg-grad-rose {
+  background-image: linear-gradient(145deg, var(--color-rose-deep), var(--color-grad-rose-end));
+}
+@utility bg-grad-sage {
+  background-image: linear-gradient(145deg, var(--color-sage-deep), var(--color-grad-sage-end));
+}
+@utility bg-grad-paper-slate {
+  background-image: linear-gradient(145deg, var(--color-paper), var(--color-slate));
+}
+@utility bg-grad-paper-rose {
+  background-image: linear-gradient(145deg, var(--color-paper), var(--color-rose));
+}
+@utility bg-grad-paper-sage {
+  background-image: linear-gradient(145deg, var(--color-paper), var(--color-sage));
+}
+/* Case-study colour code: Floods ground (paper to deeper slate) */
+@utility bg-grad-paper-slate-deep {
+  background-image: linear-gradient(145deg, var(--color-paper), var(--color-slate-deep));
+}
+@utility bg-grad-ink-slate {
+  background-image: linear-gradient(145deg, var(--color-ink), var(--color-slate));
+}
+@utility bg-grad-layered-slate {
+  background-image: linear-gradient(145deg, var(--color-grad-paper-start), var(--color-layer-slate-mid), var(--color-ink));
+}
+@utility bg-grad-layered-rose {
+  background-image: linear-gradient(145deg, var(--color-grad-paper-start), var(--color-layer-rose-mid), var(--color-ink));
+}
+@utility bg-grad-layered-sage {
+  background-image: linear-gradient(145deg, var(--color-grad-paper-start), var(--color-layer-sage-mid), var(--color-ink));
+}
+@utility bg-grad-slate-rose {
+  background-image: linear-gradient(145deg, var(--color-slate), var(--color-rose));
+}
+/* Long spreads such as the vision spread */
+@utility bg-grad-ink-slate-rose {
+  background-image: linear-gradient(145deg, var(--color-ink), var(--color-slate-deep), var(--color-slate), var(--color-rose-deep));
+}
+@utility bg-grad-partner {
+  background-image: linear-gradient(145deg, var(--color-slate-deep), #3a5a7b, #5f5f7b);
+}
+@utility bg-grad-blueprint {
+  background-image: linear-gradient(145deg, var(--color-ink), var(--color-blueprint-mid), var(--color-slate-deep));
+}
+
+/* Blueprint ground: 12px minor grid, 60px major grid */
+@utility bg-blueprint-grid {
+  background-image:
+    linear-gradient(var(--color-grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid-major) 1px, transparent 1px),
+    linear-gradient(var(--color-grid-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid-minor) 1px, transparent 1px),
+    linear-gradient(145deg, var(--color-ink), var(--color-blueprint-mid), var(--color-slate-deep));
+  background-size: 60px 60px, 60px 60px, 12px 12px, 12px 12px, 100% 100%;
+}
+
+/* Fine grain texture for gradient grounds */
+@utility grain {
+  position: relative;
+  isolation: isolate;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@utility skeleton {
+  background-image: linear-gradient(90deg, var(--color-border) 0%, var(--color-surface-sunken) 50%, var(--color-border) 100%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+@utility focus-ring {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@layer base {
+  html {
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  ::selection {
+    background: var(--color-slate-light);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  [contenteditable][data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: var(--color-text-muted);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@keyframes pulse-step {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+/* Range input: square thumb on a flat track drawn by the component */
+@layer components {
+  .ds-range {
+    appearance: none;
+    background: transparent;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+  }
+  .ds-range:disabled { cursor: not-allowed; }
+  .ds-range::-webkit-slider-runnable-track { height: 20px; background: transparent; }
+  .ds-range::-moz-range-track { height: 20px; background: transparent; }
+  .ds-range::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    background: var(--color-surface);
+    border: 2px solid var(--color-action);
+    border-radius: 0;
+  }
+  .ds-range::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: var(--color-surface);
+    border: 2px solid var(--color-action);
+    border-radius: 0;
+  }
+  .ds-range:hover::-webkit-slider-thumb { background: var(--color-action); }
+  .ds-range:hover::-moz-range-thumb { background: var(--color-action); }
+  .ds-range:focus-visible { outline: none; }
+  .ds-range:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+  .ds-range:focus-visible::-moz-range-thumb { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+  .ds-range:disabled::-webkit-slider-thumb { border-color: var(--color-border-strong); background: var(--color-surface-sunken); }
+  .ds-range:disabled::-moz-range-thumb { border-color: var(--color-border-strong); background: var(--color-surface-sunken); }
+}
+
+@keyframes toast-timer {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* SVG transform origins: scale from the element's own box */
+@utility svg-origin-bottom {
+  transform-box: fill-box;
+  transform-origin: bottom;
+}
+@utility svg-origin-left {
+  transform-box: fill-box;
+  transform-origin: left;
+}
+@utility svg-origin-center {
+  transform-box: fill-box;
+  transform-origin: center;
+}

@@ -1,0 +1,10 @@
+{
+  "description": "Helps users read and understand design guidelines, making key principles and standards easier to apply consistently.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
