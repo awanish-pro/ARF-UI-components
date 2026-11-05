@@ -50,7 +50,7 @@ export function Toggle({
               'block transition-transform duration-150',
               thumb,
               checked && shift,
-              disabled ? 'bg-border-strong' : checked ? 'bg-on-brand' : 'bg-action',
+              disabled ? 'bg-border-strong' : checked ? 'bg-on-brand' : 'bg-text',
             )}
           />
         </button>

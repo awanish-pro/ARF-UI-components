@@ -1,5 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Button, cx, KolamMotif, ToastProvider, VastuMotif } from '@/ds'
+import {
+  Button,
+  cx,
+  getAccessibleForeground,
+  KolamMotif,
+  ProjectThemeBar,
+  ProjectThemeProvider,
+  ToastProvider,
+  useProjectTheme,
+  VastuMotif,
+} from '@/ds'
 import { Dashboard } from './dashboard/Dashboard'
 import { Application } from './showcase/Application'
 import { Base } from './showcase/Base'
@@ -121,9 +131,79 @@ function GroupOpener({ number, title, accent, body }: { number: string; title: s
   )
 }
 
+function ProjectThemeBanner() {
+  const { theme } = useProjectTheme()
+  const groundFg = getAccessibleForeground(theme.groundStartHex)
+  const isDarkGround = groundFg === '#F5F3EC'
+  const ctaFg = getAccessibleForeground(theme.primary)
+
+  return (
+    <section
+      aria-label="Active project theme preview"
+      className="grain relative border-b border-rule px-6 py-8 transition-colors md:px-12"
+      style={{
+        backgroundImage: theme.groundCss,
+        color: groundFg,
+      }}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-3" style={{ borderColor: isDarkGround ? 'rgb(245 243 236 / 0.28)' : '#111111' }}>
+        <span className="font-mono text-[11px] font-medium tracking-[0.08em] uppercase" style={{ color: groundFg }}>
+          Active project theme · {theme.tabLabel}
+        </span>
+        <span
+          className="inline-flex h-6 items-center px-3 font-mono text-[11px] font-medium tracking-[0.08em] uppercase"
+          style={{
+            backgroundColor: theme.primary,
+            color: ctaFg,
+          }}
+        >
+          {theme.name}
+          {theme.location ? ` · ${theme.location}` : ''}
+        </span>
+      </div>
+
+      <div className="mt-6 flex flex-wrap items-end justify-between gap-6">
+        <div className="flex max-w-2xl flex-col gap-2">
+          <h2 className="type-display-m" style={{ color: groundFg }}>
+            Shared components themed for {theme.tabLabel}.
+          </h2>
+          <p className="type-body-s" style={{ color: isDarkGround ? '#F5F3EC' : '#111111' }}>
+            Ground: <span className="font-mono">{theme.groundLabel}</span> ({theme.groundStops}) · Primary CTA:{' '}
+            <span className="font-mono">
+              {theme.primaryLabel} ({theme.primary})
+            </span>
+            . Underlying component structure, inputs, tables, forms and navigation remain consistent across all nine projects.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            size="md"
+            trailing="arrow-right"
+            onClick={() => document.getElementById('buttons')?.scrollIntoView()}
+          >
+            Preview {theme.name} CTAs
+          </Button>
+          <Button
+            size="md"
+            variant="secondary"
+            className={isDarkGround ? 'border-paper text-paper hover:bg-paper hover:text-ink' : 'border-ink bg-paper text-ink hover:bg-hover'}
+            onClick={() => document.getElementById('colours')?.scrollIntoView()}
+          >
+            Inspect colour mapping
+          </Button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function App() {
   const route = useRoute()
-  return <ToastProvider>{route === 'dashboard' ? <Dashboard onExit={() => (window.location.hash = '')} /> : <SystemShowcase />}</ToastProvider>
+  return (
+    <ProjectThemeProvider>
+      <ToastProvider>{route === 'dashboard' ? <Dashboard onExit={() => (window.location.hash = '')} /> : <SystemShowcase />}</ToastProvider>
+    </ProjectThemeProvider>
+  )
 }
 
 function SystemShowcase() {
@@ -163,10 +243,10 @@ function SystemShowcase() {
                         aria-current={active === id ? 'location' : undefined}
                         className={cx(
                           'flex h-8 items-center gap-2.5 px-2 type-body-s transition-colors',
-                          active === id ? 'bg-action text-on-action' : 'text-text hover:bg-hover',
+                          active === id ? 'bg-text text-surface' : 'text-text hover:bg-hover',
                         )}
                       >
-                        <span aria-hidden="true" className={cx('size-1.5', active === id ? 'bg-on-action' : 'bg-transparent')} />
+                        <span aria-hidden="true" className={cx('size-1.5', active === id ? 'bg-surface' : 'bg-transparent')} />
                         {label}
                       </a>
                     </li>
@@ -183,6 +263,8 @@ function SystemShowcase() {
           </nav>
         </aside>
         <div className="min-w-0">
+          <ProjectThemeBar />
+          <ProjectThemeBanner />
           <Cover />
           <GroupOpener
             number="01"

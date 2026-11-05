@@ -24,6 +24,7 @@ import {
   TextEditor,
   Toggle,
   Tooltip,
+  useProjectTheme,
   useToast,
 } from '@/ds'
 import { categories, wards } from './data'
@@ -152,6 +153,7 @@ function ButtonsSection() {
   const [view, setView] = useState<'list' | 'map' | 'board'>('list')
   const [range, setRange] = useState<'7d' | '30d' | 'q'>('30d')
   const [loading, setLoading] = useState(false)
+  const { theme } = useProjectTheme()
   return (
     <Section
       id="buttons"
@@ -226,6 +228,24 @@ function ButtonsSection() {
             </div>
             <IconButton glyph="plus" label="Add" variant="secondary" />
             <IconButton glyph="more" label="More actions" variant="secondary" />
+          </div>
+        </Specimen>
+        <Specimen name={`On project ground · ${theme.tabLabel}`} code={`GROUND · ${theme.primaryToken.toUpperCase()}`} className="lg:col-span-2" bodyClass="p-0!">
+          <div className="grain flex flex-wrap items-center justify-between gap-4 p-6" style={{ backgroundImage: theme.groundCss }}>
+            <div className="flex flex-col gap-1">
+              <span className="font-mono text-[11px] font-medium tracking-[0.08em] uppercase" style={{ color: 'var(--project-ground-fg)' }}>
+                {theme.groundLabel} ({theme.groundStops})
+              </span>
+              <span className="type-body-s" style={{ color: 'var(--project-ground-fg)' }}>
+                Primary CTA uses {theme.primaryLabel} ({theme.primary}) with automatic accessible foreground.
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Button trailing="arrow-right">Submit {theme.name.toLowerCase()} record</Button>
+              <Button variant="secondary" className="bg-surface text-text">
+                Download report
+              </Button>
+            </div>
           </div>
         </Specimen>
         <Specimen name="On dark grounds" code="BTN · INK" dark className="lg:col-span-2">

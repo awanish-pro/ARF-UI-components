@@ -11,8 +11,10 @@ import {
   JaaliMotif,
   KolamMotif,
   Label,
+  type ProjectId,
   StambhaMotif,
   Text,
+  useProjectTheme,
   VastuMotif,
 } from '@/ds'
 import { Rules, Section, Specimen, SubHead } from './Doc'
@@ -71,16 +73,16 @@ const status = [
   { word: 'Critical', token: 'critical', fg: 'bg-critical', bg: 'bg-critical-tint', use: 'Breach, offline camera, failure.' },
 ]
 
-const caseStudyCodes = [
-  { solution: 'Video and grievance (Kanpur)', ground: 'paper → slate', groundCls: 'bg-grad-paper-slate', accent: 'slate-deep', accentCls: 'bg-slate-deep' },
-  { solution: 'Property tax (Punjab)', ground: 'warm paper', groundCls: 'bg-grad-paper', accent: 'ink', accentCls: 'bg-ink' },
-  { solution: 'Expenditure (Odisha)', ground: 'paper → rose', groundCls: 'bg-grad-paper-rose', accent: 'rose-deep', accentCls: 'bg-rose-deep' },
-  { solution: 'Air quality (AQ-iDSS)', ground: 'slate → rose', groundCls: 'bg-grad-slate-rose', accent: 'rose', accentCls: 'bg-rose' },
-  { solution: 'Floods', ground: 'paper → deeper slate', groundCls: 'bg-grad-paper-slate-deep', accent: 'slate-deep', accentCls: 'bg-slate-deep' },
-  { solution: 'Bridges and infrastructure', ground: 'paper → sage', groundCls: 'bg-grad-paper-sage', accent: 'sage-deep', accentCls: 'bg-sage-deep' },
-  { solution: 'Waste', ground: 'sage gradient', groundCls: 'bg-grad-sage', accent: 'ink', accentCls: 'bg-ink' },
-  { solution: 'Energy', ground: 'oxide rose gradient', groundCls: 'bg-grad-rose', accent: 'rose-deep', accentCls: 'bg-rose-deep' },
-  { solution: 'Water (Delhi Jal Board)', ground: 'slate gradient', groundCls: 'bg-grad-slate', accent: 'slate-deep', accentCls: 'bg-slate-deep' },
+const caseStudyCodes: { id: ProjectId; solution: string; ground: string; groundCls: string; accent: string; accentHex: string; accentCls: string }[] = [
+  { id: 'videoGrievance', solution: 'Video & Grievance (Kanpur)', ground: 'paper → slate', groundCls: 'bg-grad-paper-slate', accent: 'slate-deep', accentHex: '#2F4E6D', accentCls: 'bg-slate-deep' },
+  { id: 'propertyTax', solution: 'Property Tax (Punjab)', ground: 'warm paper', groundCls: 'bg-grad-paper', accent: 'ink', accentHex: '#111111', accentCls: 'bg-ink' },
+  { id: 'expenditure', solution: 'Expenditure (Odisha)', ground: 'paper → rose', groundCls: 'bg-grad-paper-rose', accent: 'rose-deep', accentHex: '#7E4554', accentCls: 'bg-rose-deep' },
+  { id: 'airQuality', solution: 'Air Quality (AQ-iDSS)', ground: 'slate → rose', groundCls: 'bg-grad-slate-rose', accent: 'rose', accentHex: '#9A5B6A', accentCls: 'bg-rose' },
+  { id: 'floods', solution: 'Floods', ground: 'paper → deeper slate', groundCls: 'bg-grad-paper-slate-deep', accent: 'slate-deep', accentHex: '#2F4E6D', accentCls: 'bg-slate-deep' },
+  { id: 'bridges', solution: 'Bridges & Infrastructure', ground: 'paper → sage', groundCls: 'bg-grad-paper-sage', accent: 'sage-deep', accentHex: '#6F7E70', accentCls: 'bg-sage-deep' },
+  { id: 'waste', solution: 'Waste', ground: 'sage gradient', groundCls: 'bg-grad-sage', accent: 'ink', accentHex: '#111111', accentCls: 'bg-ink' },
+  { id: 'energy', solution: 'Energy', ground: 'oxide rose gradient', groundCls: 'bg-grad-rose', accent: 'rose-deep', accentHex: '#7E4554', accentCls: 'bg-rose-deep' },
+  { id: 'water', solution: 'Water (Delhi Jal Board)', ground: 'slate gradient', groundCls: 'bg-grad-slate', accent: 'slate-deep', accentHex: '#2F4E6D', accentCls: 'bg-slate-deep' },
 ]
 
 const singleHueGradients = [
@@ -132,6 +134,7 @@ function Swatch({ name, hex, cls, dark, note, tall }: { name: string; hex: strin
 }
 
 function Colours() {
+  const { projectId, setProjectId } = useProjectTheme()
   return (
     <Section
       id="colours"
@@ -218,13 +221,13 @@ function Colours() {
       <div className="flex flex-col gap-4">
         <SubHead>Case-study colour code.</SubHead>
         <Text size="body" muted className="max-w-prose">
-          Each solution keeps one gradient and one accent across its case, product page and flyer.
+          Each solution keeps one gradient and one accent across its case, product page and flyer. Click any solution row to preview its project theme across the library.
         </Text>
         <div className="overflow-x-auto border border-border">
           <table className="w-full min-w-[640px] border-collapse">
             <thead>
               <tr className="border-b border-rule bg-surface-raised text-left">
-                {['Solution', 'Ground', 'Accent'].map((h) => (
+                {['Solution', 'Ground', 'Primary Accent / CTA', 'Theme'].map((h) => (
                   <th key={h} className="px-4 py-2.5 type-label text-text-label">
                     {h}
                   </th>
@@ -232,23 +235,38 @@ function Colours() {
               </tr>
             </thead>
             <tbody>
-              {caseStudyCodes.map((c) => (
-                <tr key={c.solution} className="border-b border-border last:border-b-0">
-                  <td className="px-4 py-3 type-body-s text-text">{c.solution}</td>
-                  <td className="px-4 py-3">
-                    <span className="flex items-center gap-3">
-                      <span className={cx('h-5 w-10 border border-border', c.groundCls)} />
-                      <span className="type-body-s text-text-muted">{c.ground}</span>
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="flex items-center gap-2.5">
-                      <span className={cx('size-4 border border-border', c.accentCls)} />
-                      <span className="font-mono text-[12px] text-text-label">{c.accent}</span>
-                    </span>
-                  </td>
-                </tr>
-              ))}
+              {caseStudyCodes.map((c) => {
+                const active = c.id === projectId
+                return (
+                  <tr
+                    key={c.solution}
+                    onClick={() => setProjectId(c.id)}
+                    className={cx('cursor-pointer border-b border-border transition-colors last:border-b-0', active ? 'bg-selected' : 'hover:bg-hover')}
+                  >
+                    <td className="px-4 py-3 type-body-s font-medium text-text">{c.solution}</td>
+                    <td className="px-4 py-3">
+                      <span className="flex items-center gap-3">
+                        <span className={cx('h-5 w-10 border border-border', c.groundCls)} />
+                        <span className="type-body-s text-text-muted">{c.ground}</span>
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="flex items-center gap-2.5">
+                        <span className={cx('size-4 border border-border', c.accentCls)} />
+                        <span className="font-mono text-[12px] text-text-label">{c.accent}</span>
+                        <span className="type-caption text-text-muted">{c.accentHex}</span>
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      {active ? (
+                        <span className="inline-flex h-6 items-center bg-project-primary px-2.5 type-label text-project-primary-fg">Active</span>
+                      ) : (
+                        <span className="type-caption text-text-muted">Select</span>
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

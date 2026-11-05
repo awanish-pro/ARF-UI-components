@@ -6,12 +6,14 @@ export type ButtonVariant = 'primary' | 'brand' | 'secondary' | 'ghost' | 'criti
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
 const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-action text-on-action border border-action hover:bg-slate-deep hover:border-slate-deep',
-  brand: 'bg-brand text-on-brand border border-brand hover:bg-action hover:border-action hover:text-on-action',
+  primary:
+    'bg-project-primary text-project-primary-fg border border-project-primary hover:bg-project-primary-hover hover:text-project-primary-hover-fg hover:border-project-primary-hover active:bg-project-primary-active active:text-project-primary-active-fg',
+  brand:
+    'bg-project-primary text-project-primary-fg border border-project-primary hover:bg-project-primary-hover hover:text-project-primary-hover-fg hover:border-project-primary-hover active:bg-project-primary-active active:text-project-primary-active-fg',
   secondary: 'bg-transparent text-text border border-rule hover:bg-hover',
   ghost: 'bg-transparent text-text border border-transparent hover:bg-hover',
   critical: 'bg-critical text-paper border border-critical hover:bg-ink hover:border-ink',
-  link: 'bg-transparent text-text-label border border-transparent underline underline-offset-4 decoration-1 hover:text-text px-0!',
+  link: 'bg-transparent text-project-accent border border-transparent underline underline-offset-4 decoration-1 hover:text-text px-0!',
 }
 
 const sizes: Record<ButtonSize, string> = {

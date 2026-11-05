@@ -22,7 +22,7 @@ export function Section({
   children: ReactNode
 }) {
   return (
-    <section id={id} className="scroll-mt-20 border-b border-border px-6 py-14 md:px-12 lg:scroll-mt-6">
+    <section id={id} className="scroll-mt-36 border-b border-border px-6 py-14 md:px-12 lg:scroll-mt-24">
       <RunningHead left={`${sectionNumber(id)} · ${group}`} right={title} />
       <Reveal className="mt-8 mb-10 flex flex-col gap-4">
         <Display size="l" accent={accent}>

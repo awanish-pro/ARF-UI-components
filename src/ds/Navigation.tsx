@@ -60,13 +60,13 @@ export function SideNav({ sections, active, onSelect, footer }: { sections: NavS
                       onClick={() => onSelect(it.id)}
                       className={cx(
                         'flex h-9 w-full cursor-pointer items-center justify-between px-4 text-left type-body-s transition-colors',
-                        on ? 'bg-action font-medium text-on-action' : 'text-text hover:bg-hover',
+                        on ? 'bg-text font-medium text-surface' : 'text-text hover:bg-hover',
                       )}
                     >
                       <span>{it.label}</span>
                       {it.count !== undefined ? (
                         on ? (
-                          <span className="font-mono text-[11px] text-on-action">{it.count}</span>
+                          <span className="font-mono text-[11px] text-surface">{it.count}</span>
                         ) : (
                           <CountBadge value={it.count} tone={it.urgent ? 'critical' : 'neutral'} />
                         )
@@ -99,7 +99,7 @@ export function TopNav({ items, active, onSelect }: { items: { id: string; label
             className={cx('relative cursor-pointer type-body-s font-medium transition-colors', on ? 'text-text' : 'text-text-muted hover:text-text')}
           >
             {it.label}
-            {on ? <span aria-hidden="true" className="absolute inset-x-0 -bottom-px h-0.5 bg-action" /> : null}
+            {on ? <span aria-hidden="true" className="absolute inset-x-0 -bottom-px h-0.5 bg-text" /> : null}
           </button>
         )
       })}
