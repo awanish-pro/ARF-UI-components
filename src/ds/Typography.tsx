@@ -66,10 +66,10 @@ export function Text({
   return <As className={cx(sizeClass, withColour(className, muted ? 'text-text-muted' : 'text-text'), className)}>{children}</As>
 }
 
-/** Outlined headline figure. */
+/** Solid filled headline figure in Space Grotesk (slate-deep on paper, paper on dark) for screen legibility. */
 export function Figure({ children, size = 'xl', className }: { children: ReactNode; size?: 'xl' | 'm'; className?: string }) {
   return (
-    <span className={cx(size === 'xl' ? 'type-figure-xl' : 'type-figure-m', 'figure-outline block', className)}>
+    <span className={cx(size === 'xl' ? 'type-figure-xl' : 'type-figure-m', 'block tabular-nums', withColour(className, 'text-figure'), className)}>
       {children}
     </span>
   )

@@ -1,13 +1,31 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { cx } from './cx'
 
-/** StatFigure: 1px rule above, outlined figure, label in body-s text-muted. Only figures with a source. */
-export function StatFigure({ figure, label, size = 'xl', stroke }: { figure: string; label: ReactNode; size?: 'xl' | 'm'; stroke?: string }) {
+/** StatFigure: 1px rule above, solid filled figure for screen readability, label in body-s text-muted. Only figures with a source. */
+export function StatFigure({
+  figure,
+  label,
+  size = 'xl',
+  colour,
+  stroke,
+}: {
+  figure: string
+  label: ReactNode
+  size?: 'xl' | 'm'
+  /** Optional custom fill colour (CSS value). Defaults to semantic `figure` token (slate-deep on paper, paper on dark). */
+  colour?: string
+  /** @deprecated Use `colour` instead; retained for backwards compatibility as solid fill colour. */
+  stroke?: string
+}) {
+  const fill = colour ?? stroke
   return (
     <div className="flex flex-col gap-3 border-t border-rule pt-4">
       <span
-        className={cx(size === 'xl' ? 'type-figure-xl' : 'type-figure-m', 'figure-outline block whitespace-nowrap')}
-        style={stroke ? ({ '--figure-stroke': stroke } as CSSProperties) : undefined}
+        className={cx(
+          size === 'xl' ? 'type-figure-xl' : 'type-figure-m',
+          'block whitespace-nowrap tabular-nums text-figure',
+        )}
+        style={fill ? ({ color: fill } as CSSProperties) : undefined}
       >
         {figure}
       </span>

@@ -67,7 +67,7 @@
   --color-on-brand: #f5f3ec;
   --color-hover: #eae3d7;
   --color-selected: #e1e4e2;
-  --color-figure: #52769a;
+  --color-figure: #2f4e6d;
   --color-scrim: rgb(17 17 17 / 0.72); /* screen only, never in print */
 
   /* Project theme tokens (updated dynamically by ProjectThemeProvider) */
@@ -94,6 +94,7 @@
   --color-caution: #9a5b6a;
   --color-caution-tint: #eae1dc;
   --color-critical: #7e4554;
+  --color-on-critical: #f5f3ec;
   --color-critical-tint: #e1d2cf;
 
   /* Four faces, one job each */
@@ -116,6 +117,7 @@
   --animate-rise: rise 280ms var(--ease-quiet) both;
   --animate-slide-in-right: slide-in-right 320ms var(--ease-quiet) both;
   --animate-toast-in: toast-in 280ms var(--ease-quiet) both;
+  --animate-toast-top: toast-top 260ms var(--ease-quiet) both;
   --animate-grow-y: grow-y 700ms var(--ease-quiet) both;
   --animate-grow-x: grow-x 700ms var(--ease-quiet) both;
   --animate-draw: draw 1100ms var(--ease-quiet) both;
@@ -142,6 +144,9 @@
   }
   @keyframes toast-in {
     from { opacity: 0; transform: translateX(24px); }
+  }
+  @keyframes toast-top {
+    from { opacity: 0; transform: translateY(-16px); }
   }
   @keyframes grow-y {
     from { transform: scaleY(0); }
@@ -205,13 +210,14 @@
   --color-stage-pilot: #c99aa2;
   --color-stage-prototype: #f5f3ec;
   --color-info: #9bb3cc;
-  --color-info-tint: #212a33;
+  --color-info-tint: #1b242d;
   --color-success: #b8c3b9;
-  --color-success-tint: #323632;
+  --color-success-tint: #242a25;
   --color-caution: #c99aa2;
   --color-caution-tint: #332427;
   --color-critical: #c99aa2;
-  --color-critical-tint: #4a2c34;
+  --color-on-critical: #111111;
+  --color-critical-tint: #3d2028;
   color: var(--color-text);
 }
 

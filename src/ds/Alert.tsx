@@ -9,7 +9,7 @@ const toneStyles: Record<AlertTone, { box: string; strip: string; dot: string }>
   info: { box: 'border-info bg-info-tint', strip: 'border-info text-info', dot: 'bg-info' },
   success: { box: 'border-success bg-success-tint', strip: 'border-success text-success', dot: 'bg-success' },
   caution: { box: 'border-caution bg-caution-tint', strip: 'border-caution text-caution', dot: 'bg-caution' },
-  critical: { box: 'border-critical bg-critical-tint', strip: 'border-critical bg-critical text-paper', dot: 'bg-paper' },
+  critical: { box: 'border-critical bg-critical-tint', strip: 'border-critical bg-critical text-on-critical', dot: 'bg-on-critical' },
 }
 
 /**
@@ -69,10 +69,18 @@ export function Banner({ tone = 'info', children, action }: { tone?: AlertTone; 
   )
 }
 
-/* ---------------- Toasts ---------------- */
+/* ---------------- Toasts (Middle Top) ---------------- */
 
-export type Toast = { id: number; tone: AlertTone; title: string; body?: string; module?: string }
-type ToastCtx = { push: (t: Omit<Toast, 'id'>) => void }
+export type Toast = {
+  id: number
+  tone: AlertTone
+  title: string
+  body?: string
+  module?: string
+  /** Keep toast visible until manually dismissed (used for offline / critical errors). */
+  persistent?: boolean
+}
+type ToastCtx = { push: (t: Omit<Toast, 'id'>) => void; dismissAll: () => void }
 const Ctx = createContext<ToastCtx | null>(null)
 
 export function useToast() {
@@ -84,12 +92,55 @@ export function useToast() {
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([])
   const dismiss = useCallback((id: number) => setToasts((t) => t.filter((x) => x.id !== id)), [])
-  const push = useCallback((t: Omit<Toast, 'id'>) => setToasts((all) => [...all.slice(-3), { ...t, id: Date.now() + Math.random() }]), [])
-  const value = useMemo(() => ({ push }), [push])
+  const dismissAll = useCallback(() => setToasts([]), [])
+  const push = useCallback(
+    (t: Omit<Toast, 'id'>) => setToasts((all) => [...all.slice(-3), { ...t, id: Date.now() + Math.random() }]),
+    [],
+  )
+
+  // Automatic middle-top network status notifications
+  useEffect(() => {
+    const onOffline = () => {
+      setToasts((all) => [
+        ...all.filter((x) => x.module !== 'Network'),
+        {
+          id: Date.now() + Math.random(),
+          tone: 'critical',
+          module: 'Network',
+          title: 'No internet connection.',
+          body: 'Work is saved on this device and will sync once connection returns.',
+          persistent: true,
+        },
+      ])
+    }
+    const onOnline = () => {
+      setToasts((all) => [
+        ...all.filter((x) => x.module !== 'Network'),
+        {
+          id: Date.now() + Math.random(),
+          tone: 'success',
+          module: 'Network',
+          title: 'Connection restored.',
+          body: 'Queued actions are syncing now.',
+        },
+      ])
+    }
+    window.addEventListener('offline', onOffline)
+    window.addEventListener('online', onOnline)
+    return () => {
+      window.removeEventListener('offline', onOffline)
+      window.removeEventListener('online', onOnline)
+    }
+  }, [])
+
+  const value = useMemo(() => ({ push, dismissAll }), [push, dismissAll])
   return (
     <Ctx.Provider value={value}>
       {children}
-      <div aria-live="polite" className="pointer-events-none fixed right-4 bottom-4 z-50 flex w-[360px] max-w-[calc(100vw-2rem)] flex-col gap-2">
+      <div
+        aria-live="polite"
+        className="pointer-events-none fixed top-4 left-1/2 z-50 flex w-[420px] max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-col gap-2"
+      >
         {toasts.map((t) => (
           <ToastItem key={t.id} toast={t} onDismiss={() => dismiss(t.id)} />
         ))}
@@ -102,11 +153,15 @@ const toastDot: Record<AlertTone, string> = { info: 'bg-slate-light', success: '
 
 function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }) {
   useEffect(() => {
+    if (toast.persistent) return
     const t = setTimeout(onDismiss, 5000)
     return () => clearTimeout(t)
-  }, [onDismiss])
+  }, [onDismiss, toast.persistent])
   return (
-    <div className="theme-ink pointer-events-auto animate-toast-in border border-rule bg-grad-ink">
+    <div
+      role={toast.tone === 'critical' ? 'alert' : 'status'}
+      className="theme-ink pointer-events-auto animate-toast-top border border-rule bg-grad-ink"
+    >
       <div className="flex items-start gap-3 px-4 py-3">
         <span aria-hidden="true" className={cx('mt-1.5 size-1.5 shrink-0', toastDot[toast.tone])} />
         <div className="flex flex-1 flex-col gap-0.5">
@@ -119,9 +174,11 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
         </div>
         <IconButton glyph="close" label="Dismiss notification" size="sm" onClick={onDismiss} className="-mt-1 -mr-2" />
       </div>
-      <div className="h-0.5 bg-rule">
-        <div className="h-full origin-left bg-slate-light animate-[toast-timer_5s_linear_forwards]" />
-      </div>
+      {!toast.persistent ? (
+        <div className="h-0.5 bg-rule">
+          <div className="h-full origin-left bg-slate-light animate-[toast-timer_5s_linear_forwards]" />
+        </div>
+      ) : null}
     </div>
   )
 }

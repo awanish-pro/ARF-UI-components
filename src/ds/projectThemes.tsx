@@ -302,16 +302,22 @@ export function getProjectCssVariables(projectId: ProjectId): Record<string, str
   }
 }
 
+export type SurfaceTheme = 'paper' | 'ink'
+
 type ProjectThemeContextValue = {
   projectId: ProjectId
   theme: ProjectTheme
   setProjectId: (id: ProjectId) => void
+  surfaceTheme: SurfaceTheme
+  setSurfaceTheme: (mode: SurfaceTheme) => void
 }
 
 const ProjectThemeContext = createContext<ProjectThemeContextValue>({
   projectId: 'videoGrievance',
   theme: projectThemes.videoGrievance,
   setProjectId: () => {},
+  surfaceTheme: 'paper',
+  setSurfaceTheme: () => {},
 })
 
 export function useProjectTheme() {
@@ -320,29 +326,93 @@ export function useProjectTheme() {
 
 export function ProjectThemeProvider({
   defaultProject = 'videoGrievance',
+  defaultSurface = 'paper',
   children,
 }: {
   defaultProject?: ProjectId
+  defaultSurface?: SurfaceTheme
   children: ReactNode
 }) {
   const [projectId, setProjectId] = useState<ProjectId>(defaultProject)
+  const [surfaceTheme, setSurfaceTheme] = useState<SurfaceTheme>(() => {
+    if (typeof window === 'undefined') return defaultSurface
+    const saved = window.localStorage.getItem('airawat-surface-theme')
+    return saved === 'ink' || saved === 'paper' ? saved : defaultSurface
+  })
   const theme = projectThemes[projectId]
   const vars = getProjectCssVariables(projectId)
 
   useEffect(() => {
     const root = document.documentElement
     root.dataset.project = projectId
+    root.dataset.theme = surfaceTheme
+    root.classList.toggle('theme-ink', surfaceTheme === 'ink')
+    try {
+      window.localStorage.setItem('airawat-surface-theme', surfaceTheme)
+    } catch {}
     for (const [key, val] of Object.entries(vars)) {
       root.style.setProperty(key, val)
     }
-  }, [projectId, vars])
+  }, [projectId, surfaceTheme, vars])
 
   return (
-    <ProjectThemeContext.Provider value={{ projectId, theme, setProjectId }}>
-      <div style={vars as CSSProperties} data-project={projectId} className="contents">
+    <ProjectThemeContext.Provider value={{ projectId, theme, setProjectId, surfaceTheme, setSurfaceTheme }}>
+      <div
+        style={vars as CSSProperties}
+        data-project={projectId}
+        data-theme={surfaceTheme}
+        className={cx('contents', surfaceTheme === 'ink' && 'theme-ink')}
+      >
         {children}
       </div>
     </ProjectThemeContext.Provider>
+  )
+}
+
+/**
+ * Paper (Light) / Ink (Dark) global surface theme switch.
+ * Obeys WCAG AA & AAA contrast rules in both themes.
+ */
+export function SurfaceThemeSwitch({ className }: { className?: string }) {
+  const { surfaceTheme, setSurfaceTheme } = useProjectTheme()
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Surface theme: Paper light or Ink dark"
+      className={cx('inline-flex shrink-0 border border-rule bg-surface', className)}
+    >
+      {(
+        [
+          ['paper', 'Paper · Light'],
+          ['ink', 'Ink · Dark'],
+        ] as const
+      ).map(([mode, label], i) => {
+        const active = surfaceTheme === mode
+        return (
+          <button
+            key={mode}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={() => setSurfaceTheme(mode)}
+            className={cx(
+              'inline-flex h-7 cursor-pointer items-center gap-1.5 px-2.5 type-label transition-colors',
+              i > 0 && 'border-l border-rule',
+              active ? 'bg-text text-surface' : 'bg-surface text-text hover:bg-hover',
+            )}
+          >
+            <span
+              aria-hidden="true"
+              className={cx(
+                'size-2 border',
+                mode === 'paper' ? 'border-border-strong bg-paper' : 'border-slate-light bg-ink',
+              )}
+            />
+            {label}
+          </button>
+        )
+      })}
+    </div>
   )
 }
 
@@ -412,6 +482,7 @@ export function ProjectThemeBar({ className }: { className?: string }) {
               {theme.primaryLabel} ({theme.primary})
             </span>
           </span>
+          <SurfaceThemeSwitch />
         </div>
       </div>
 

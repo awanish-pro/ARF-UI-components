@@ -36,6 +36,7 @@ import {
   TopNav,
   useDismiss,
   useToast,
+  WhitespaceMotif,
 } from '@/ds'
 import { calendarEvents, commands, navSections, wards } from './data'
 import { Rules, Section, Specimen } from './Doc'
@@ -97,19 +98,63 @@ function AlertsSection() {
         ) : null}
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
-        <Specimen name="Toasts" code="TOAST">
+        <Specimen name="Toasts · middle top" code="TOAST-TOP">
           <div className="flex flex-wrap gap-2">
-            <Button variant="secondary" onClick={() => push({ tone: 'success', module: 'PGR', title: 'PGR-24-08812 closed with proof.', body: 'Citizen notified by SMS.' })}>
-              Success toast
+            <Button
+              variant="secondary"
+              onClick={() =>
+                push({
+                  tone: 'critical',
+                  module: 'Network',
+                  title: 'No internet connection.',
+                  body: 'Work is saved locally and will sync once connection returns.',
+                  persistent: true,
+                })
+              }
+            >
+              No internet
             </Button>
-            <Button variant="secondary" onClick={() => push({ tone: 'info', module: 'VMS', title: 'Clip export ready.', body: 'CAM-KNP-0417 · 15 min · 212 MB' })}>
-              Info toast
+            <Button
+              variant="secondary"
+              onClick={() =>
+                push({
+                  tone: 'critical',
+                  module: 'PT · ERR-503',
+                  title: 'Failed to save assessment.',
+                  body: 'Server timed out. Your draft is preserved; retry when ready.',
+                })
+              }
+            >
+              Error toast
             </Button>
-            <Button variant="secondary" onClick={() => push({ tone: 'critical', module: 'PT', title: 'Demand notice batch failed.', body: '12 of 840 records missing an owner name.' })}>
-              Critical toast
+            <Button
+              variant="secondary"
+              onClick={() =>
+                push({
+                  tone: 'success',
+                  module: 'PGR',
+                  title: 'Record KNP-PID-408290 added.',
+                  body: 'Assigned to Zone 2 verification queue.',
+                })
+              }
+            >
+              Data added
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() =>
+                push({
+                  tone: 'caution',
+                  module: 'PGR',
+                  title: 'Duplicate record deleted.',
+                  body: 'PGR-24-08791 removed from active inbox.',
+                })
+              }
+            >
+              Data deleted
             </Button>
           </div>
-          <Caption className="mt-4 block">Bottom right, up to four at once. Critical items also stay in the notification centre.</Caption>
+          <Caption className="mt-4 block">Anchored middle-top (max 4 stacked). Automatically triggers when browser goes offline or reconnects.</Caption>
         </Specimen>
         <Specimen name="Notification centre" code="NTF" bodyClass="p-0!">
           <div className="flex items-center justify-between border-b border-rule px-4 py-2.5">
@@ -384,11 +429,34 @@ function StatesSection() {
           </Specimen>
           <Specimen name="First use" code="EMP-02" bodyClass="p-0!">
             <EmptyState
+              motif="stambha"
               label="Property register"
               title="No properties imported for"
               accent="Sector 82 yet."
               body="Upload the drone survey or the existing tax register to begin matching."
               actions={<Button variant="brand" leading="plus">Import survey</Button>}
+            />
+          </Specimen>
+          <Specimen name="Whitespace motif · VMS" code="EMP-JAALI" bodyClass="p-0!">
+            <WhitespaceMotif
+              motif="jaali"
+              label="VMS · No camera detections"
+              title="No anomalies logged in"
+              accent="this shift."
+              body="All 64 streams are active. Heritage Jaali motif marks open breathing room."
+              caption="Motif: Jaali · ways of seeing"
+              className="border-0"
+            />
+          </Specimen>
+          <Specimen name="Whitespace motif · Twins" code="EMP-BAOLI" bodyClass="p-0!">
+            <WhitespaceMotif
+              motif="baoli-colour"
+              label="Digital twins · No layers loaded"
+              title="Select a ward to read"
+              accent="down the layers."
+              body="Physical, process and decision twin layers appear once a ward boundary is chosen."
+              caption="Motif: Baoli · each layer reads from the one below"
+              className="border-0"
             />
           </Specimen>
         </div>
@@ -563,7 +631,7 @@ function MetricsSection() {
       title="Metrics"
       headline="Every number with"
       accent="a source."
-      intro="Headline figures are outlined in Space Grotesk over a 1px rule. Dashboard cards show the value, the change in words and colour, a flat bar trend and a source line. Estimates say so."
+      intro="Headline figures are set in solid Space Grotesk over a 1px rule for crisp screen legibility. Dashboard cards show the value, the change in words and colour, a flat bar trend and a source line. Estimates say so."
     >
       <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 2xl:grid-cols-4">
         <StatFigure figure="82%" label="PGR complaints closed within 48 hours, up from 60%" />

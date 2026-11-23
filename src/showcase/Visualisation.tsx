@@ -4,12 +4,15 @@ import {
   Button,
   ButtonGroup,
   ChartFrame,
+  CityMap,
   CompositionBar,
   cx,
   DonutChart,
   Funnel,
   Gauge,
+  GisMap,
   Heatmap,
+  IndiaStateMap,
   LineChart,
   ScatterPlot,
   Slider,
@@ -242,6 +245,74 @@ export function ScatterSection() {
   )
 }
 
+export function MapsSection() {
+  const [site, setSite] = useState<string | null>('kanpur')
+  const [ward, setWard] = useState<string | null>('w12')
+  const [surface, setSurface] = useState<'dark' | 'paper'>('dark')
+  return (
+    <Section
+      id="maps"
+      group={G}
+      title="Maps"
+      headline="Deployments and wards drawn"
+      accent="as schematics."
+      intro="India and state maps use white or paper outlines with lighter state borders and rose deployment rings. City maps show ward polygons in muted fills, highways in slate, rail dashed in rose, a north arrow and a scale bar."
+    >
+      <div className="grid gap-6 xl:grid-cols-2">
+        <ChartFrame
+          label="India and state deployment map"
+          code="MAP-IND"
+          actions={
+            <ButtonGroup
+              label="Map surface"
+              size="sm"
+              value={surface}
+              onChange={setSurface}
+              options={[
+                { value: 'dark', label: 'Dark blueprint' },
+                { value: 'paper', label: 'Paper' },
+              ]}
+            />
+          }
+          source="Airawat Programme Office · schematic outline, not to scale"
+        >
+          <IndiaStateMap surface={surface} selected={site} onSelect={(id) => setSite(site === id ? null : id)} />
+        </ChartFrame>
+
+        <ChartFrame
+          label="City ward map · Kanpur"
+          code="MAP-CITY"
+          legend={[
+            { label: 'Highways', tone: 'slate' },
+            { label: 'Rail corridor', tone: 'rose', dashed: true },
+          ]}
+          source="Municipal ward boundaries, Kanpur · schematic, not to scale"
+        >
+          <CityMap selected={ward} onSelect={(id) => setWard(ward === id ? null : id)} />
+        </ChartFrame>
+      </div>
+      <ChartFrame
+        label="Kanpur GIS spatial layer · ward boundaries and live detections"
+        code="MAP-GIS-KNP"
+        status="Live detections"
+        source="Kanpur Nagar Nigam GIS register & Sentinel-2 orthophoto · drag to pan · tags illustrative"
+      >
+        <GisMap />
+      </ChartFrame>
+
+      <Rules
+        title="Map rules"
+        items={[
+          'India and state maps: white or paper outlines, state borders lighter, deployment sites as rings with a dot in rose-light on dark or rose on paper.',
+          'City maps: ward polygons in a muted fill, highways in slate, rail dashed in rose, with a north arrow and a scale bar.',
+          'GIS maps: map parcel status strictly onto the five brand colours and their solid washes (never bright neon red, green, or purple). Annotate live detections with thin white or ink boxes, small paper label tags (Detection, Confidence), and a Captured / Read / Decided evidence trail.',
+          'Every map sits inside a frame with a reference code and a source line, and names the selected site, ward, or parcel in words.',
+        ]}
+      />
+    </Section>
+  )
+}
+
 export function TileMapSection() {
   const [sel, setSel] = useState<string | null>('w12')
   const layout: [number, number][] = [[0, 2], [0, 3], [0, 4], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [3, 0], [3, 1], [3, 2], [3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [5, 2], [5, 3], [5, 5]]
@@ -318,6 +389,7 @@ export function Visualisation() {
       <HeatmapSection />
       <GaugeSection />
       <ScatterSection />
+      <MapsSection />
       <TileMapSection />
       <TimelineSection />
       <CompositionSection />

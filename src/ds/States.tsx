@@ -1,7 +1,27 @@
 import type { ReactNode } from 'react'
 import { cx } from './cx'
 import { StepLoader } from './Button'
-import { KolamMotif, VastuMotif, BaoliMotif } from './Motifs'
+import { BaoliMotif, JaaliMotif, KolamMotif, StambhaMotif, VastuMotif } from './Motifs'
+
+export type HeritageMotifName = 'vastu' | 'kolam' | 'jaali' | 'baoli' | 'baoli-colour' | 'stambha'
+
+function renderMotif(name: HeritageMotifName) {
+  switch (name) {
+    case 'kolam':
+      return <KolamMotif className="h-9 w-48 text-slate" />
+    case 'jaali':
+      return <JaaliMotif className="size-20 text-slate" />
+    case 'baoli':
+      return <BaoliMotif className="h-16 w-28 text-rose" />
+    case 'baoli-colour':
+      return <BaoliMotif coloured className="h-16 w-28 text-slate" />
+    case 'stambha':
+      return <StambhaMotif className="h-24 w-10 text-sage-deep" />
+    case 'vastu':
+    default:
+      return <VastuMotif className="size-20 text-slate" />
+  }
+}
 
 /** Shared frame for full-panel states: a motif in open space, a label, a headline with accent, a line of context. */
 function StateFrame({
@@ -39,8 +59,68 @@ function StateFrame({
   )
 }
 
-export function EmptyState(props: { title: string; accent: string; body: ReactNode; actions?: ReactNode; label?: string }) {
-  return <StateFrame {...props} label={props.label ?? 'Nothing here yet'} motif={<VastuMotif className="size-20 text-slate" />} />
+export function EmptyState(props: {
+  title: string
+  accent: string
+  body: ReactNode
+  actions?: ReactNode
+  label?: string
+  motif?: HeritageMotifName
+  caption?: string
+}) {
+  return (
+    <StateFrame
+      {...props}
+      label={props.label ?? 'Nothing here yet'}
+      motif={renderMotif(props.motif ?? 'vastu')}
+      footnote={props.caption}
+    />
+  )
+}
+
+/**
+ * WhitespaceMotif: Creative open-space / no-data placeholder using one of
+ * the five Airawat Brand Guide hairline heritage motifs.
+ * Placed strictly in open whitespace, never behind running text.
+ */
+export function WhitespaceMotif({
+  motif = 'vastu',
+  label = 'No data available',
+  title = 'Waiting for the first',
+  accent = 'verified record.',
+  body,
+  caption,
+  actions,
+  className,
+}: {
+  motif?: HeritageMotifName
+  label?: string
+  title?: string
+  accent?: string
+  body?: ReactNode
+  caption?: string
+  actions?: ReactNode
+  className?: string
+}) {
+  return (
+    <div
+      className={cx(
+        'flex flex-col items-center justify-center gap-5 border border-border bg-surface px-8 py-12 text-center',
+        className,
+      )}
+    >
+      <div className="flex items-center justify-center">{renderMotif(motif)}</div>
+      <div className="flex max-w-md flex-col gap-1.5">
+        <span className="type-label text-text-label">{label}</span>
+        <h3 className="type-display-m text-text">
+          {title} <span className="text-text-accent">{accent}</span>
+        </h3>
+        {body ? <p className="type-body-s text-text-muted">{body}</p> : null}
+      </div>
+      {actions ? <div className="flex flex-wrap justify-center gap-2">{actions}</div> : null}
+      {caption ? <span className="type-caption text-text-muted">{caption}</span> : null}
+    </div>
+  )
 }
 
 export function ErrorState(props: { title: string; accent: string; body: ReactNode; actions?: ReactNode; code: string }) {

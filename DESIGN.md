@@ -160,7 +160,7 @@ Use semantic tokens in components. They switch automatically inside `theme-ink` 
 | `brand` / `on-brand` | slate-deep / paper | slate-light / ink | Checked controls, slider fill, brand button |
 | `hover` | `#EAE3D7` | `#2A3D51` | Hover fill |
 | `selected` | `#E1E4E2` | `#2A3D51` | Range selection, selected rows |
-| `figure` | slate | paper | Outlined figure stroke |
+| `figure` | slate-deep (`#2F4E6D`) | paper (`#F5F3EC`) | Solid metric and headline figure fill (no stroke) |
 | `scrim` | ink at 72% | ink at 72% | Modal backdrop. **Screen only.** |
 
 ### Stage colours
@@ -270,7 +270,7 @@ Each style is a single utility that sets family, size, line height, weight and t
 | `type-caption` | 11 / 1.5 / 400, caps, +0.04em | Sources, timestamps, footnotes |
 | `type-wordmark` | 30 / 1 / 700 | Product lockup only |
 
-**Outlined figures:** `figure-outline` gives a transparent fill and a 1.5px stroke in `figure` (slate on paper, paper on ink). Override per case with the CSS variable `--figure-stroke`.
+**Metric figures (UI extension):** `StatFigure` and `Figure` use a **solid fill** in `figure` (`slate-deep` on paper, `paper` on ink) with `tabular-nums` and no text stroke, ensuring crisp readability across dashboard KPIs and metric rows. Pass `colour` on `StatFigure` (or a text colour class on `Figure`) to override per case. Hollow outlines (`figure-outline`) are reserved only for decorative 120px section-opener numerals.
 
 Rules:
 
@@ -457,19 +457,21 @@ Breakpoints follow Tailwind defaults. The side navigation collapses below `lg` (
 
 ---
 
-## 11. Theming: paper and ink
+## 11. Theming: Paper (Light) and Ink (Dark)
 
-The paper theme is the default. Add the `theme-ink` utility to any dark gradient ground, and every semantic token inside it switches to its ink value, so components adapt with no extra props.
+The **Paper (Light)** theme (`#F5F3EC`) is the default. Developers can toggle the entire interface between **Paper (Light)** and **Ink (Dark)** via `<SurfaceThemeSwitch />` or `useProjectTheme().setSurfaceTheme('paper' | 'ink')`, which applies `.theme-ink` and `data-theme="ink"` to `document.documentElement` and persists to `localStorage`. You can also scope any dark gradient panel locally with `.theme-ink`.
+
+Every semantic foreground/background token pair in both Paper (Light) and Ink (Dark) modes meets **WCAG 2.1 AA (4.5:1+)** and **AAA (7.0:1+)** contrast (including `--color-on-critical`: `#F5F3EC` on `#7E4554` in Paper = 6.6:1 AA, and `#111111` on `#C99AA2` in Ink = 7.9:1 AAA).
 
 ```tsx
 <section className="theme-ink grain bg-grad-ink-slate p-8">
   <Display size="l" accent="built to scale.">One spine,</Display>
-  <Button>Open live wall</Button>   {/* paper fill, ink text */}
+  <Button>Open live wall</Button>   {/* high-contrast light fill, ink text */}
   <StageTag stage="pilot" />        {/* rose-light */}
 </section>
 ```
 
-Rule: if a ground is dark, it must be an approved gradient **and** carry `theme-ink`.
+Rule: if a ground is dark, it must be an approved gradient **and** carry `theme-ink`. Never use flat charcoal pages.
 
 ---
 
@@ -693,7 +695,7 @@ Use tooltips to define acronyms and terms. **Never** put actions in a tooltip, o
 | --- | --- |
 | `Alert` | Inline, built like a blueprint box: a header strip with the status word (Notice, Resolved, Caution, Critical) and a reference `code`, then a `title` heading and one line of context. Props: `tone`, `title`, `children`, `code`, `actions`, `onDismiss`. |
 | `Banner` | Full-width system notice. Info and critical banners sit on ink grounds and adapt via `theme-ink`. Props: `tone`, `children`, `action`. |
-| `ToastProvider` + `useToast().push({ tone, title, body?, module? })` | Transient confirmation on an ink gradient. Bottom right, up to four at once, auto-dismiss after 5s with a timer bar. |
+| `ToastProvider` + `useToast().push({ tone, title, body?, module?, persistent? })` | **Middle-top** (`top-center`) ink-gradient notification for offline state, errors, data added, or data deleted. Up to four stacked, 5s auto-dismiss (or `persistent` until dismissed). Automatically triggers on browser `offline` and `online` events. |
 | `NotificationItem` | A row in the notification centre. Props: `module`, `title`, `body`, `time`, `unread`, `tone`. |
 
 Rules:
@@ -739,7 +741,8 @@ Each command has `id`, `group`, `label`, `meta`, `shortcut`, `colour` and `onRun
 
 | Component | Motif | Required content |
 | --- | --- | --- |
-| `EmptyState` | Vastu | Why the list is empty, and the next useful step. `title`, `accent`, `body`, `actions`, `label` |
+| `EmptyState` | Vastu (or `motif` prop) | Why the list is empty, and the next useful step. `title`, `accent`, `body`, `actions`, `label`, `motif` (`vastu \| kolam \| jaali \| baoli \| baoli-colour \| stambha`) |
+| `WhitespaceMotif` | Any of the 5 Brand Guide motifs | Creative open-whitespace / no-data panel displaying one hairline heritage motif in breathing room, never behind running text. |
 | `SkeletonTable`, `Skeleton` | None | Mirrors the final layout. Use for loads under a few seconds. |
 | `ErrorState` | Baoli in a critical frame | What failed in the reader's terms, a reference `code`, and retry first. Nothing the user typed is lost. |
 | `OfflineState` | Broken Kolam | That the user is offline, `lastSynced`, `queued` actions, and that work is saved on the device. |
@@ -751,7 +754,7 @@ State headlines follow the accent rule: "No grievances match *these filters.*"
 
 | Component | Use |
 | --- | --- |
-| `StatFigure` | 1px rule above, an outlined figure, and a body-s muted label. Use in rows of three to five. Props: `figure`, `label`, `size`, `stroke`. |
+| `StatFigure` | 1px rule above, a solid-filled figure (`tabular-nums`, no stroke), and a body-s muted label. Use in rows of three to five. Props: `figure`, `label`, `size`, `colour`. |
 | `MetricCard` | Dashboard tile: a header strip with label and module code, a solid figure and unit, the delta in mono (▲/▼) coloured by whether the change is good (`goodWhen`), a flat bar trend, and a **required** `source` line. |
 | `BarList` | Horizontal flat bars with values and a required source caption. |
 
@@ -829,6 +832,9 @@ Charts are drawn, not illustrated. They follow the blueprint: flat, square-ended
 | `Gauge` | One share against a target | `value` (0 to 100), `target`, `label`, `tone`, `size` |
 | `Sparkline` | Inline trend shape | `data`, `tone`, `width`, `height` |
 | `ScatterPlot` | Relationship and outliers | `points` `{ x, y, label, flag? }[]`, `xLabel`, `yLabel`, `diagonal`, `flagLabel` |
+| `IndiaStateMap` | National and state deployment sites | `sites` `{ id, name, state, project, stage?, x, y, metric? }[]`, `surface` (`dark \| paper`), `selected`, `onSelect`, `code` |
+| `CityMap` | Municipal wards, highways and rail | `wards` `{ id, label, name, path, cx, cy, metric? }[]`, `highways`, `railLines`, `selected`, `onSelect`, `scaleLabel`, `code` |
+| `GisMap` | GIS parcel boundaries & live AI detections | `parcels`, `title`, `code`, `defaultBase` (`paper \| blueprint`). Search, category chips, zoom/layer stack, detection boxes + `Captured / Read / Decided` trail. |
 | `TileMap` | Ward-level values, equal-area | `tiles` `{ id, label, row, col, value, name? }[]`, `selected`, `onSelect`, `tone` |
 | `Timeline` | Dated events on one axis | `events` `{ date, title, position (0 to 1), tone? }[]` |
 | `CompositionBar` | A whole in one line | `segments`, `format` |

@@ -589,7 +589,7 @@ function Typography() {
               </div>
             ))}
           </div>
-          <Caption className="mt-5 block">Outlined: transparent fill, 1.5px stroke. Slate on paper, paper on dark grounds.</Caption>
+          <Caption className="mt-5 block">Solid fill in Space Grotesk 600 (tabular numerals) for screen readability. Slate-deep on paper, paper on dark grounds.</Caption>
         </Specimen>
         <Specimen name="Product lockup" code="LOGO · MONTSERRAT 700" dark>
           <div className="flex h-full flex-col justify-between gap-6">

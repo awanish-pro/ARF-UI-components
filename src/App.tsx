@@ -101,7 +101,7 @@ function Cover() {
       <div className="mt-14 grid grid-cols-2 gap-6 md:grid-cols-4">
         {toc.map((g, i) => (
           <div key={g.group} className="flex animate-fade-up flex-col gap-3 border-t border-rule pt-4" style={{ animationDelay: `${300 + i * 100}ms` }}>
-            <span className="type-figure-xl figure-outline">{g.items.length}</span>
+            <span className="type-figure-xl tabular-nums text-paper">{g.items.length}</span>
             <span className="type-body-s text-text-muted">{g.group}</span>
           </div>
         ))}
@@ -208,10 +208,16 @@ export default function App() {
 
 function SystemShowcase() {
   const active = useActiveSection()
+  const { surfaceTheme } = useProjectTheme()
   const [menuOpen, setMenuOpen] = useState(false)
   return (
     <>
-      <div className="min-h-screen bg-surface text-text lg:grid lg:grid-cols-[264px_1fr]">
+      <div
+        className={cx(
+          'min-h-screen text-text lg:grid lg:grid-cols-[264px_1fr]',
+          surfaceTheme === 'ink' ? 'theme-ink bg-grad-ink-slate' : 'bg-surface',
+        )}
+      >
         <aside className="sticky top-0 z-20 border-b border-border bg-surface-raised lg:h-screen lg:border-r lg:border-b-0">
           <div className="flex h-14 items-center justify-between border-b border-rule px-5">
             <span className="flex items-center gap-3">

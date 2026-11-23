@@ -16,7 +16,7 @@ const toneFill: Record<Tone, string> = {
   info: 'bg-info-tint text-info border-info-tint',
   success: 'bg-success-tint text-success border-success-tint',
   caution: 'bg-caution-tint text-caution border-caution-tint',
-  critical: 'bg-critical text-paper border-critical',
+  critical: 'bg-critical text-on-critical border-critical',
 }
 const toneDot: Record<Tone, string> = {
   neutral: 'bg-text-muted',
@@ -48,7 +48,7 @@ export function Badge({
         className,
       )}
     >
-      {dot ? <span aria-hidden="true" className={cx('size-1.5', variant === 'soft' && tone === 'critical' ? 'bg-paper' : toneDot[tone])} /> : null}
+      {dot ? <span aria-hidden="true" className={cx('size-1.5', variant === 'soft' && tone === 'critical' ? 'bg-on-critical' : toneDot[tone])} /> : null}
       {children}
     </span>
   )
@@ -60,7 +60,7 @@ export function CountBadge({ value, tone = 'neutral' }: { value: number; tone?: 
     <span
       className={cx(
         'inline-flex h-5 min-w-5 items-center justify-center px-1.5 font-mono text-[11px] leading-none font-medium',
-        tone === 'critical' ? 'bg-critical text-paper' : 'bg-action text-on-action',
+        tone === 'critical' ? 'bg-critical text-on-critical' : 'bg-action text-on-action',
       )}
     >
       {value > 99 ? '99+' : value}
