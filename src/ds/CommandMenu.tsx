@@ -38,8 +38,8 @@ export function CommandMenu({ open, onClose, commands }: { open: boolean; onClos
     <div className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[12vh]">
       <div className="absolute inset-0 bg-scrim animate-fade-in" onClick={onClose} aria-hidden="true" />
       <div role="dialog" aria-modal="true" aria-label="Command menu" className="relative w-full max-w-xl animate-rise border border-rule bg-surface">
-        <div className="flex items-center gap-3 border-b border-rule px-4">
-          <Glyph name="search" className="text-text-muted" />
+        <div data-search-field className="flex items-center gap-3 border-b border-rule px-4 focus-within:border-b-focus">
+          <Glyph name="search" className="shrink-0 text-text-muted" />
           <input
             autoFocus
             value={q}
@@ -62,7 +62,7 @@ export function CommandMenu({ open, onClose, commands }: { open: boolean; onClos
             aria-controls="cmd-list"
             aria-activedescendant={results[active] ? `cmd-${results[active].id}` : undefined}
             placeholder="Search grievances, cameras, properties or actions"
-            className="h-14 flex-1 bg-transparent type-body text-text outline-none placeholder:text-text-muted"
+            className="h-14 min-w-0 flex-1 border-0 bg-transparent type-body text-text outline-none focus:outline-none focus-visible:outline-none placeholder:text-text-muted"
           />
           <kbd className="border border-border px-1.5 py-0.5 type-caption text-text-muted">Esc</kbd>
         </div>

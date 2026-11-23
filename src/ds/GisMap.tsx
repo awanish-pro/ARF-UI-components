@@ -534,7 +534,10 @@ export function GisMap({
       >
         {/* Top-left floating GIS Search + Filter Chips overlay */}
         <div className="pointer-events-none absolute top-3 right-14 left-3 z-20 flex flex-col gap-2">
-          <div className="pointer-events-auto flex w-full max-w-md items-center border border-rule bg-surface text-text">
+          <div
+            data-search-field
+            className="pointer-events-auto flex w-full max-w-md items-center border border-rule bg-surface text-text focus-within:outline-2 focus-within:outline-offset-[-1px] focus-within:outline-focus"
+          >
             <span className="flex size-9 shrink-0 items-center justify-center border-r border-border text-text-muted">
               <Glyph name="search" size={14} />
             </span>
@@ -544,7 +547,7 @@ export function GisMap({
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search 71.3k Kanpur properties (Owner, UID, Ward)"
               aria-label="Search Kanpur GIS properties"
-              className="h-9 w-full bg-transparent px-3 type-body-s text-text placeholder:text-text-muted focus:outline-none"
+              className="h-9 min-w-0 flex-1 border-0 bg-transparent px-3 type-body-s text-text placeholder:text-text-muted outline-none focus:outline-none focus-visible:outline-none"
             />
             {query ? (
               <button

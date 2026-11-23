@@ -13,7 +13,7 @@ colors:
   slate-light: "#9bb3cc"
   rose: "#9a5b6a"
   rose-deep: "#7e4554"
-  rose-light: "#161616ff"
+  rose-light: "#c99aa2"
   sage: "#96a394"
   sage-deep: "#6f7e70"
   sage-dark: "#4f5d50"
@@ -119,81 +119,125 @@ gradients:
   blueprint-panel: "linear-gradient(145deg, #111111, #1f3044, #2f4e6d)"
 
 projectThemes:
-  # Per-project primary colour and ground from ARF Design and Brand Guide (V2).
-  # Only project-scoped primary CTAs, project tabs, case tabs, and project ground
-  # banners read these values. All shared UI components remain identical across projects.
-  videoGrievance:
-    label: "Video & Grievance (Kanpur)"
+  # Per-project primary colour and ground from ARF Design and Brand Guide (V2, Page 4).
+  # IMPORTANT FOR AI AGENTS & DEVELOPERS:
+  # 1. Match the current codebase to ONE project key below (e.g., `pgr` for Public Grievance
+  #    Redressal, `vms` for Video Monitoring System, `property-tax` for Property Tax).
+  # 2. Set `<html data-project="<key>">` and apply ONLY that project's primary colour.
+  # 3. NEVER fall back to Property Tax (`#111111`) when building PGR or VMS (`#2F4E6D`).
+  # 4. NEVER render a multi-project switcher bar at the top of a single-product app.
+  # 5. All shared UI components (inputs, selects, tables, cards, modals, toggles, nav) keep
+  #    the exact same Design System V2 colours across every project.
+  pgr:
+    label: "Public Grievance Redressal (PGR · Kanpur)"
+    aliases: ["PGR", "Public Grievance Redressal", "Grievance", "Kanpur PGR"]
     ground: "{gradients.paper-to-slate}"
     primary: "{colors.slate-deep}"
     primaryHex: "#2F4E6D"
     primaryFg: "{colors.paper}"
     primaryHover: "{colors.ink}"
+    primaryHoverFg: "{colors.paper}"
     onDarkPrimary: "{colors.slate-light}"
-  propertyTax:
-    label: "Property Tax (Punjab)"
+    onDarkPrimaryFg: "{colors.ink}"
+  vms:
+    label: "Video Monitoring System (VMS · Kanpur)"
+    aliases: ["VMS", "Video Monitoring System", "Video Management System", "Video & Grievance"]
+    ground: "{gradients.paper-to-slate}"
+    primary: "{colors.slate-deep}"
+    primaryHex: "#2F4E6D"
+    primaryFg: "{colors.paper}"
+    primaryHover: "{colors.ink}"
+    primaryHoverFg: "{colors.paper}"
+    onDarkPrimary: "{colors.slate-light}"
+    onDarkPrimaryFg: "{colors.ink}"
+  property-tax:
+    label: "Property Tax (Punjab / Mohali)"
+    aliases: ["PT", "Property Tax", "Property Tax Intelligence", "Mohali", "Punjab"]
     ground: "{gradients.warm-paper}"
     primary: "{colors.ink}"
     primaryHex: "#111111"
     primaryFg: "{colors.paper}"
     primaryHover: "{colors.slate-deep}"
+    primaryHoverFg: "{colors.paper}"
     onDarkPrimary: "{colors.paper}"
+    onDarkPrimaryFg: "{colors.ink}"
   expenditure:
-    label: "Expenditure (Odisha)"
+    label: "Expenditure Management (Odisha)"
+    aliases: ["Expenditure", "Expenditure Management", "Odisha"]
     ground: "{gradients.paper-to-rose}"
     primary: "{colors.rose-deep}"
     primaryHex: "#7E4554"
     primaryFg: "{colors.paper}"
     primaryHover: "{colors.ink}"
+    primaryHoverFg: "{colors.paper}"
     onDarkPrimary: "{colors.rose-light}"
-  airQuality:
+    onDarkPrimaryFg: "{colors.ink}"
+  air-quality:
     label: "Air Quality (AQ-iDSS)"
+    aliases: ["Air Quality", "AQ-iDSS", "AQI", "Pollution"]
     ground: "{gradients.slate-to-rose}"
     primary: "{colors.rose}"
     primaryHex: "#9A5B6A"
     primaryFg: "{colors.paper}"
     primaryHover: "{colors.rose-deep}"
+    primaryHoverFg: "{colors.paper}"
     onDarkPrimary: "{colors.rose-light}"
+    onDarkPrimaryFg: "{colors.ink}"
   floods:
     label: "Floods"
+    aliases: ["Flood", "Floods", "Urban Flooding"]
     ground: "{gradients.paper-to-deeper-slate}"
     primary: "{colors.slate-deep}"
     primaryHex: "#2F4E6D"
     primaryFg: "{colors.paper}"
     primaryHover: "{colors.ink}"
+    primaryHoverFg: "{colors.paper}"
     onDarkPrimary: "{colors.slate-light}"
+    onDarkPrimaryFg: "{colors.ink}"
   bridges:
     label: "Bridges & Infrastructure"
+    aliases: ["Bridge", "Bridges", "Bridges & Infrastructure", "Infrastructure"]
     ground: "{gradients.paper-to-sage}"
     primary: "{colors.sage-deep}"
     primaryHex: "#6F7E70"
     primaryFg: "{colors.ink}"
     primaryHover: "{colors.sage-dark}"
+    primaryHoverFg: "{colors.paper}"
     onDarkPrimary: "{colors.sage}"
+    onDarkPrimaryFg: "{colors.ink}"
   waste:
-    label: "Waste"
+    label: "Waste Management"
+    aliases: ["Waste", "Solid Waste", "Sanitation Waste"]
     ground: "{gradients.sage}"
     primary: "{colors.ink}"
     primaryHex: "#111111"
     primaryFg: "{colors.paper}"
     primaryHover: "{colors.sage-dark}"
+    primaryHoverFg: "{colors.paper}"
     onDarkPrimary: "{colors.paper}"
+    onDarkPrimaryFg: "{colors.ink}"
   energy:
     label: "Energy"
+    aliases: ["Energy", "Power", "Grid"]
     ground: "{gradients.oxide-rose}"
     primary: "{colors.rose-deep}"
     primaryHex: "#7E4554"
     primaryFg: "{colors.paper}"
     primaryHover: "{colors.ink}"
+    primaryHoverFg: "{colors.paper}"
     onDarkPrimary: "{colors.rose-light}"
+    onDarkPrimaryFg: "{colors.ink}"
   water:
     label: "Water (Delhi Jal Board)"
+    aliases: ["Water", "Delhi Jal Board", "DJB", "Water Supply"]
     ground: "{gradients.slate}"
     primary: "{colors.slate-deep}"
     primaryHex: "#2F4E6D"
     primaryFg: "{colors.paper}"
     primaryHover: "{colors.ink}"
+    primaryHoverFg: "{colors.paper}"
     onDarkPrimary: "{colors.slate-light}"
+    onDarkPrimaryFg: "{colors.ink}"
 
 typography:
   display-xl:
@@ -338,15 +382,8 @@ components:
     textColor: "{colors.text-label}"
     typography: "{typography.label}"
 
-  # Multi-project theme elements (ONLY surfaces that adapt per project)
-  project-theme-bar:
-    backgroundColor: "{colors.surface}"
-    borderBottom: "1px solid {colors.rule}"
-    tabTypography: "{typography.body-s}"
-    activeTabBackground: "var(--project-primary)"
-    activeTabText: "var(--project-primary-fg)"
-    rounded: "{rounded.none}"
-    height: 40px
+  # Project-scoped editorial elements (NOTE: Do NOT add a 9-solution switcher bar to product apps;
+  # each product app configures a single project theme in :root CSS variables)
   project-ground-banner:
     backgroundImage: "var(--project-ground)"
     textColor: "var(--project-ground-fg)"
@@ -448,6 +485,15 @@ components:
     rounded: "{rounded.none}"
     height: 40px
     padding: 0 12px
+  search-input:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.text}"
+    borderColor: "{colors.border-strong}"
+    borderWidth: 1px
+    focusRing: "2px solid {colors.focus} on outer container via :focus-within (inner <input> MUST have outline: none on :focus and :focus-visible)"
+    typography: "{typography.body}"
+    rounded: "{rounded.none}"
+    height: 40px
   text-input-error:
     borderColor: "{colors.critical}"
     errorTextColor: "{colors.critical}"
@@ -713,6 +759,266 @@ Where the print guide and the live interface system differ, the live Airawat Des
 
 ---
 
+## Mandatory Implementation Rules (Read Before Coding)
+
+Follow these seven non-negotiable rules whenever applying this design system to an existing or new Airawat web application:
+
+1. **NEVER add a 9-solution / "SOLUTION:" switcher bar to a product app.**
+   Each product application (such as Kanpur PGR, Mohali Property Tax, or Odisha Expenditure) picks **one** entry from `projectThemes` and sets `--project-primary` and `--project-primary-fg` once on `:root`. Do **not** render a top bar listing all nine Airawat solutions in a product app. (The 9-project tab bar exists exclusively in the internal Design System Showcase website.)
+2. **Eliminate all rounded corners (`0px`) and all pure-white (`#FFFFFF`) cards.**
+   Audit every card, container, list item, search input, filter chip, priority button, tab, and floating button in the app and enforce `border-radius: 0px` and `box-shadow: none`. Replace `#FFFFFF` card backgrounds with `surface` (`#F5F3EC`) or `surface-raised` (`#EFEAE1`) separated by `1px solid #D6CFC3` (`border`) or `1px solid #111111` (`rule`). Only `StageTag` (`9999px` pill) and `Avatar` (`9999px` circle) may be rounded.
+3. **Replace every non-brand colour (red, yellow, green, blue, purple, amber) with the 5-colour palette.**
+   Never keep default Tailwind or third-party colours on priority pills (`H / M / L`), status chips, charts, or floating action buttons. Map them strictly onto Airawat tokens: High/Critical → `rose-deep` (`#7E4554`) + `rose-wash` (`#E1D2CF`); Medium/Caution → `rose` (`#9A5B6A`) + `rose-tint` (`#EAE1DC`); Low/Resolved → `sage-dark` (`#4F5D50`) + `sage-tint` (`#EAE9E1`); Info/Primary → `slate-deep` (`#2F4E6D`) + `slate-tint` (`#E1E4E2`).
+4. **Remove all decorative icons, sparkles, emojis, and em dashes.**
+   Strip sparkle icons, decorative eye/clock/bell/lightning icons inside cards, and rounded floating AI sparkle buttons. Use plain words, uppercase `JetBrains Mono` labels, 6px filled brand squares (`size-1.5`), and only the 14 square-capped functional glyphs for UI affordances. Replace every em dash in UI copy with a full stop, comma, or colon.
+5. **Preserve working map tile providers (no API-key-gated tiles).**
+   Never replace an existing working map tile URL with Carto (`carto.com/basemaps/apikey`) or any basemap requiring an API key. Keep the application's existing working tile server (or keyless OpenStreetMap / schematic SVG layer) and apply Airawat tokens to ward boundaries, parcel polygons, detection boxes, and 0px HUD controls.
+6. **Composite search & prefixed inputs: focus ring on outer container only (never nested double borders).**
+   When a search bar or input wraps a leading search icon (or prefix/suffix/clear button) and an `<input>` inside a bordered container, **never** let the inner `<input>` render its own border or `:focus-visible` outline. Always suppress `outline: none` on both `:focus` and `:focus-visible` of the inner `<input>`, wrap global `:focus-visible` inside `@layer base`, and apply the single `2px` square focus ring to the **outer container** via `:focus-within`:
+
+```css
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  [data-search-field] input:focus,
+  [data-search-field] input:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+  input[type='search']::-webkit-search-decoration,
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+}
+```
+
+```tsx
+<div
+  data-search-field
+  className="flex h-10 w-full items-center border border-border-strong bg-surface focus-within:border-rule focus-within:outline-2 focus-within:outline-offset-[-1px] focus-within:outline-focus"
+>
+  <span className="pointer-events-none flex shrink-0 items-center pl-3 text-text-muted">
+    <Glyph name="search" size={16} />
+  </span>
+  <input
+    type="search"
+    className="h-full min-w-0 flex-1 border-0 bg-transparent px-2.5 type-body text-text placeholder:text-text-muted outline-none focus:outline-none focus-visible:outline-none"
+    placeholder="Search..."
+  />
+</div>
+```
+
+7. **Drop-in CSS Token Foundation (Paper Light + Ink Dark, WCAG AA & AAA):**
+   Paste these variables into the app's global stylesheet so every component inherits exact tokens and switches cleanly when `.theme-ink` is toggled on `<html>`:
+
+```css
+:root {
+  /* Paper (Light) theme: default */
+  --color-surface: #f5f3ec;
+  --color-surface-raised: #efeae1;
+  --color-surface-sunken: #eae3d7;
+  --color-text: #111111;
+  --color-text-muted: #615a52;
+  --color-text-label: #2f4e6d;
+  --color-text-accent: #7e4554;
+  --color-rule: #111111;
+  --color-border: #d6cfc3;
+  --color-border-strong: #a99f91;
+  --color-action: #111111;
+  --color-on-action: #f5f3ec;
+  --color-brand: #2f4e6d;
+  --color-on-brand: #f5f3ec;
+  --color-critical: #7e4554;
+  --color-on-critical: #f5f3ec;
+  --color-figure: #2f4e6d;
+  /* Set once per product app from projectThemes (example: Video & Grievance Kanpur) */
+  --project-primary: #2f4e6d;
+  --project-primary-fg: #f5f3ec;
+  --project-primary-hover: #111111;
+}
+
+.theme-ink {
+  /* Ink (Dark) theme: WCAG AA & AAA verified; always pair with bg-grad-ink-slate */
+  --color-surface: #111111;
+  --color-surface-raised: #1c2a38;
+  --color-surface-sunken: #0b0f14;
+  --color-text: #f5f3ec;
+  --color-text-muted: #c9d6e3;
+  --color-text-label: #9bb3cc;
+  --color-text-accent: #c99aa2;
+  --color-rule: #4a5d72;
+  --color-border: #4a5d72;
+  --color-border-strong: #7e9bb8;
+  --color-action: #f5f3ec;
+  --color-on-action: #111111;
+  --color-brand: #9bb3cc;
+  --color-on-brand: #111111;
+  --color-critical: #c99aa2;
+  --color-on-critical: #111111;
+  --color-figure: #f5f3ec;
+  --project-primary: #9bb3cc;
+  --project-primary-fg: #111111;
+  --project-primary-hover: #f5f3ec;
+}
+
+/* --------------------------------------------------------------------------
+   Per-Project Primary Colour Selectors (Set `<html data-project="...">` once
+   per app). AI agents MUST match the target app to its exact project key:
+   - PGR (Public Grievance Redressal) -> data-project="pgr" (#2F4E6D Slate Deep)
+   - VMS (Video Monitoring System)    -> data-project="vms" (#2F4E6D Slate Deep)
+   - Property Tax                     -> data-project="property-tax" (#111111 Ink)
+   - Expenditure                      -> data-project="expenditure" (#7E4554 Rose Deep)
+   - Air Quality (AQ-iDSS)            -> data-project="air-quality" (#9A5B6A Rose)
+   - Floods                           -> data-project="floods" (#2F4E6D Slate Deep)
+   - Bridges & Infrastructure         -> data-project="bridges" (#6F7E70 Sage Deep)
+   - Waste                            -> data-project="waste" (#111111 Ink)
+   - Energy                           -> data-project="energy" (#7E4554 Rose Deep)
+   - Water (Delhi Jal Board)          -> data-project="water" (#2F4E6D Slate Deep)
+   -------------------------------------------------------------------------- */
+[data-project="pgr"],
+[data-project="vms"] {
+  --project-primary: #2f4e6d;
+  --project-primary-fg: #f5f3ec;
+  --project-primary-hover: #111111;
+  --project-primary-hover-fg: #f5f3ec;
+  --project-accent: #2f4e6d;
+  --project-ground: linear-gradient(145deg, #f5f3ec, #52769a);
+}
+[data-project="property-tax"] {
+  --project-primary: #111111;
+  --project-primary-fg: #f5f3ec;
+  --project-primary-hover: #2f4e6d;
+  --project-primary-hover-fg: #f5f3ec;
+  --project-accent: #111111;
+  --project-ground: linear-gradient(145deg, #f8f6ef, #eae3d7);
+}
+[data-project="expenditure"] {
+  --project-primary: #7e4554;
+  --project-primary-fg: #f5f3ec;
+  --project-primary-hover: #111111;
+  --project-primary-hover-fg: #f5f3ec;
+  --project-accent: #7e4554;
+  --project-ground: linear-gradient(145deg, #f5f3ec, #9a5b6a);
+}
+[data-project="air-quality"] {
+  --project-primary: #9a5b6a;
+  --project-primary-fg: #f5f3ec;
+  --project-primary-hover: #7e4554;
+  --project-primary-hover-fg: #f5f3ec;
+  --project-accent: #7e4554;
+  --project-ground: linear-gradient(145deg, #52769a, #9a5b6a);
+}
+[data-project="floods"] {
+  --project-primary: #2f4e6d;
+  --project-primary-fg: #f5f3ec;
+  --project-primary-hover: #111111;
+  --project-primary-hover-fg: #f5f3ec;
+  --project-accent: #2f4e6d;
+  --project-ground: linear-gradient(145deg, #f5f3ec, #2f4e6d);
+}
+[data-project="bridges"] {
+  --project-primary: #6f7e70;
+  --project-primary-fg: #111111;
+  --project-primary-hover: #4f5d50;
+  --project-primary-hover-fg: #f5f3ec;
+  --project-accent: #4f5d50;
+  --project-ground: linear-gradient(145deg, #f5f3ec, #96a394);
+}
+[data-project="waste"] {
+  --project-primary: #111111;
+  --project-primary-fg: #f5f3ec;
+  --project-primary-hover: #4f5d50;
+  --project-primary-hover-fg: #f5f3ec;
+  --project-accent: #111111;
+  --project-ground: linear-gradient(145deg, #6f7e70, #b8c3b9);
+}
+[data-project="energy"] {
+  --project-primary: #7e4554;
+  --project-primary-fg: #f5f3ec;
+  --project-primary-hover: #111111;
+  --project-primary-hover-fg: #f5f3ec;
+  --project-accent: #7e4554;
+  --project-ground: linear-gradient(145deg, #7e4554, #c48a96);
+}
+[data-project="water"] {
+  --project-primary: #2f4e6d;
+  --project-primary-fg: #f5f3ec;
+  --project-primary-hover: #111111;
+  --project-primary-hover-fg: #f5f3ec;
+  --project-accent: #2f4e6d;
+  --project-ground: linear-gradient(145deg, #2f4e6d, #7e9bb8);
+}
+
+/* Ink (Dark) theme overrides for each project (WCAG AAA contrast >= 7.0:1) */
+.theme-ink[data-project="pgr"],
+.theme-ink[data-project="vms"],
+.theme-ink[data-project="floods"],
+.theme-ink[data-project="water"] {
+  --project-primary: #9bb3cc;
+  --project-primary-fg: #111111;
+  --project-accent: #9bb3cc;
+}
+.theme-ink[data-project="property-tax"],
+.theme-ink[data-project="waste"] {
+  --project-primary: #f5f3ec;
+  --project-primary-fg: #111111;
+  --project-accent: #f5f3ec;
+}
+.theme-ink[data-project="expenditure"],
+.theme-ink[data-project="air-quality"],
+.theme-ink[data-project="energy"] {
+  --project-primary: #c99aa2;
+  --project-primary-fg: #111111;
+  --project-accent: #c99aa2;
+}
+.theme-ink[data-project="bridges"] {
+  --project-primary: #96a394;
+  --project-primary-fg: #111111;
+  --project-accent: #96a394;
+}
+```
+
+7. **Drop-in TypeScript/JavaScript Project Theme Applier (Call once in `main.tsx`):**
+
+```ts
+export type AirawatProject =
+  | 'pgr'
+  | 'vms'
+  | 'property-tax'
+  | 'expenditure'
+  | 'air-quality'
+  | 'floods'
+  | 'bridges'
+  | 'waste'
+  | 'energy'
+  | 'water'
+
+export const AIRAWAT_PROJECT_PRIMARY: Record<AirawatProject, { primary: string; fg: string; ground: string }> = {
+  pgr:            { primary: '#2F4E6D', fg: '#F5F3EC', ground: 'linear-gradient(145deg, #F5F3EC, #52769A)' },
+  vms:            { primary: '#2F4E6D', fg: '#F5F3EC', ground: 'linear-gradient(145deg, #F5F3EC, #52769A)' },
+  'property-tax': { primary: '#111111', fg: '#F5F3EC', ground: 'linear-gradient(145deg, #F8F6EF, #EAE3D7)' },
+  expenditure:    { primary: '#7E4554', fg: '#F5F3EC', ground: 'linear-gradient(145deg, #F5F3EC, #9A5B6A)' },
+  'air-quality':  { primary: '#9A5B6A', fg: '#F5F3EC', ground: 'linear-gradient(145deg, #52769A, #9A5B6A)' },
+  floods:         { primary: '#2F4E6D', fg: '#F5F3EC', ground: 'linear-gradient(145deg, #F5F3EC, #2F4E6D)' },
+  bridges:        { primary: '#6F7E70', fg: '#111111', ground: 'linear-gradient(145deg, #F5F3EC, #96A394)' },
+  waste:          { primary: '#111111', fg: '#F5F3EC', ground: 'linear-gradient(145deg, #6F7E70, #B8C3B9)' },
+  energy:         { primary: '#7E4554', fg: '#F5F3EC', ground: 'linear-gradient(145deg, #7E4554, #C48A96)' },
+  water:          { primary: '#2F4E6D', fg: '#F5F3EC', ground: 'linear-gradient(145deg, #2F4E6D, #7E9BB8)' },
+}
+
+/** Call once at app boot, e.g. applyAirawatProject('pgr') or applyAirawatProject('vms'). */
+export function applyAirawatProject(project: AirawatProject, mode: 'paper' | 'ink' = 'paper') {
+  const root = document.documentElement
+  root.dataset.project = project
+  root.dataset.theme = mode
+  root.classList.toggle('theme-ink', mode === 'ink')
+}
+```
+
+---
+
 ## Principles & Voice
 
 ### Core Design Principles
@@ -820,17 +1126,17 @@ Every text and status foreground/background pair is verified for **WCAG 2.1 AA (
 
 Each of the nine Airawat solutions owns one approved ground gradient and one primary accent / CTA colour. In the interface kit, `ProjectThemeProvider` (`src/ds/projectThemes.tsx`) dynamically updates `--project-primary`, `--project-primary-fg`, `--project-primary-hover`, `--project-primary-active`, `--project-ground`, `--project-accent`, and `--project-focus`. Foreground text on CTAs and grounds is selected automatically via WCAG 2.1 relative luminance (`getAccessibleForeground`).
 
-| Project / Solution | Ground Theme | Stops | Primary Accent / CTA |
+| Solution | `data-project` Key | Ground | Primary Accent / CTA |
 |---|---|---|---|
-| **Video & Grievance (Kanpur)** | Paper → Slate | `#F5F3EC → #52769A` | `slate-deep` `#2F4E6D` |
-| **Property Tax (Punjab)** | Warm Paper | `#F8F6EF → #EAE3D7` | `ink` `#111111` |
-| **Expenditure (Odisha)** | Paper → Rose | `#F5F3EC → #9A5B6A` | `rose-deep` `#7E4554` |
-| **Air Quality (AQ-iDSS)** | Slate → Rose | `#52769A → #9A5B6A` | `rose` `#9A5B6A` |
-| **Floods** | Paper → Deeper Slate | `#F5F3EC → #2F4E6D` | `slate-deep` `#2F4E6D` |
-| **Bridges & Infrastructure** | Paper → Sage | `#F5F3EC → #96A394` | `sage-deep` `#6F7E70` |
-| **Waste** | Sage Gradient | `#6F7E70 → #B8C3B9` | `ink` `#111111` |
-| **Energy** | Oxide Rose Gradient | `#7E4554 → #C48A96` | `rose-deep` `#7E4554` |
-| **Water (Delhi Jal Board)** | Slate Gradient | `#2F4E6D → #7E9BB8` | `slate-deep` `#2F4E6D` |
+| **Video & Grievance (Kanpur)** *(covers PGR & VMS)* | `video-grievance` *(aliases: `pgr`, `vms`)* | paper → slate (`#F5F3EC → #52769A`) | `slate-deep` `#2F4E6D` |
+| **Property Tax (Punjab)** | `property-tax` | warm paper (`#F8F6EF → #EAE3D7`) | `ink` `#111111` |
+| **Expenditure (Odisha)** | `expenditure` | paper → rose (`#F5F3EC → #9A5B6A`) | `rose-deep` `#7E4554` |
+| **Air Quality (AQ-iDSS)** | `air-quality` | slate → rose (`#52769A → #9A5B6A`) | `rose` `#9A5B6A` |
+| **Floods** | `floods` | paper → deeper slate (`#F5F3EC → #2F4E6D`) | `slate-deep` `#2F4E6D` |
+| **Bridges & Infrastructure** | `bridges` | paper → sage (`#F5F3EC → #96A394`) | `sage-deep` `#6F7E70` |
+| **Waste** | `waste` | sage gradient (`#6F7E70 → #B8C3B9`) | `ink` `#111111` |
+| **Energy** | `energy` | oxide rose gradient (`#7E4554 → #C48A96`) | `rose-deep` `#7E4554` |
+| **Water (Delhi Jal Board)** | `water` | slate gradient (`#2F4E6D → #7E9BB8`) | `slate-deep` `#2F4E6D` |
 
 **Consistency Boundary (Different Primary Colour, Identical Shared Components):**
 - **Changes per project (ARF New Design Guideline):** Only the project's assigned **Primary Colour** (`--project-primary` / `--project-primary-fg` / `--project-accent`), applied to primary CTA buttons (`button-primary`, `button-link`), the active project tab (`ProjectThemeBar`), `CaseTab`, and the project's **Ground Theme** (`--project-ground`) for hero/banner previews.
@@ -1061,9 +1367,9 @@ Motion has three jobs: **Orient** (menus, drawers), **Confirm** (toasts, settled
 - **`CaseTab`**: Flush-right header tab filled with the solution's case-study accent and `paper` `label` text.
 - **`RunningHead`**: `label` section tag left and topic right over a 1px `rule`.
 
-### Multi-Project Theme Components
-- **`ProjectThemeProvider`**: Central context provider injecting `--project-*` CSS custom properties onto `:root` and persisting the active project across routes.
-- **`ProjectThemeBar`**: Sticky, horizontally scrollable 9-project tab bar with keyboard arrow navigation and live Ground / Primary CTA readouts.
+### Multi-Project Theme Configuration
+- **`ProjectThemeProvider`**: Central context provider injecting `--project-*` CSS custom properties onto `:root` for the single project this application belongs to (for example `defaultProject="videoGrievance"` for Kanpur PGR), plus global `Paper (Light)` / `Ink (Dark)` theme switching via `<SurfaceThemeSwitch />`.
+- **`ProjectThemeBar` (Showcase Only)**: Horizontally scrollable 9-project preview bar used **exclusively** inside the Design System Showcase website. **Never render this bar in a production product application.**
 
 ### Navigation & Shell
 - **`ProductLockup` & `LogoSlot`**: Logo slot, vertical rule, and Montserrat product name (`AIRAWAT OS`).

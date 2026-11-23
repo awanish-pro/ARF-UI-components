@@ -441,6 +441,19 @@
     outline: 2px solid var(--color-focus);
     outline-offset: 2px;
   }
+  /* Composite search / prefixed inputs render a single focus ring on the outer container via :focus-within */
+  [data-search-field] input:focus,
+  [data-search-field] input:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+  input[type='search']::-webkit-search-decoration,
+  input[type='search']::-webkit-search-cancel-button,
+  input[type='search']::-webkit-search-results-button,
+  input[type='search']::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
   [contenteditable][data-placeholder]:empty::before {
     content: attr(data-placeholder);
     color: var(--color-text-muted);

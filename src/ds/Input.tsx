@@ -59,47 +59,140 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { label, hint, error, leading, prefix, suffix, required, optional, className, id, ...rest },
+  { label, hint, error, leading, prefix, suffix, required, optional, className, id, disabled, ...rest },
   ref,
 ) {
   const autoId = useId()
   const inputId = id ?? autoId
   const describedBy = error || hint ? `${inputId}-desc` : undefined
+  const isComposite = Boolean(prefix || suffix)
   return (
     <Field label={label} htmlFor={inputId} hint={hint} error={error} required={required} optional={optional}>
-      <div className="relative flex items-stretch">
-        {prefix ? (
-          <span className="inline-flex items-center whitespace-nowrap border border-r-0 border-border-strong bg-surface-raised px-3 font-mono text-[13px] text-text-muted">
-            {prefix}
-          </span>
-        ) : null}
-        {leading ? (
-          <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-text-muted">
-            <Glyph name={leading} />
-          </span>
-        ) : null}
-        <input
-          ref={ref}
-          id={inputId}
-          required={required}
-          aria-invalid={error ? true : undefined}
-          aria-describedby={describedBy}
+      {isComposite ? (
+        <div
+          data-search-field
           className={cx(
-            controlBase,
-            'h-10 px-3',
-            leading && 'pl-9',
-            error ? 'border-critical' : 'border-border-strong hover:border-rule',
-            className,
+            'relative flex h-10 items-stretch border bg-surface transition-colors',
+            'focus-within:outline-2 focus-within:outline-offset-[-1px] focus-within:outline-focus',
+            disabled
+              ? 'border-border bg-surface-sunken text-text-muted'
+              : error
+                ? 'border-critical'
+                : 'border-border-strong hover:border-rule focus-within:border-rule',
           )}
-          {...rest}
-        />
-        {suffix ? (
-          <span className="inline-flex items-center whitespace-nowrap border border-l-0 border-border-strong bg-surface-raised px-3 font-mono text-[13px] text-text-muted">
-            {suffix}
-          </span>
-        ) : null}
-      </div>
+        >
+          {prefix ? (
+            <span className="inline-flex items-center whitespace-nowrap border-r border-border bg-surface-raised px-3 font-mono text-[13px] text-text-muted">
+              {prefix}
+            </span>
+          ) : null}
+          {leading ? (
+            <span className="pointer-events-none inline-flex items-center pl-3 text-text-muted">
+              <Glyph name={leading} />
+            </span>
+          ) : null}
+          <input
+            ref={ref}
+            id={inputId}
+            required={required}
+            disabled={disabled}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={describedBy}
+            className={cx(
+              'min-w-0 flex-1 border-0 bg-transparent px-3 text-text type-body placeholder:text-text-muted outline-none focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:text-text-muted',
+              leading && 'pl-2',
+              className,
+            )}
+            {...rest}
+          />
+          {suffix ? (
+            <span className="inline-flex items-center whitespace-nowrap border-l border-border bg-surface-raised px-3 font-mono text-[13px] text-text-muted">
+              {suffix}
+            </span>
+          ) : null}
+        </div>
+      ) : (
+        <div className="relative flex items-stretch">
+          {leading ? (
+            <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-text-muted">
+              <Glyph name={leading} />
+            </span>
+          ) : null}
+          <input
+            ref={ref}
+            id={inputId}
+            required={required}
+            disabled={disabled}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={describedBy}
+            className={cx(
+              controlBase,
+              'h-10 px-3',
+              leading && 'pl-9',
+              error ? 'border-critical' : 'border-border-strong hover:border-rule',
+              className,
+            )}
+            {...rest}
+          />
+        </div>
+      )}
     </Field>
+  )
+})
+
+type SearchInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
+  onClear?: () => void
+  compact?: boolean
+}
+
+/**
+ * Composite search bar: single outer square border + `:focus-within` ring.
+ * Inner `<input>` suppresses `:focus` and `:focus-visible` outlines so a nested
+ * double border never appears beside the search icon.
+ */
+export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput(
+  { className, value, onClear, compact, disabled, ...rest },
+  ref,
+) {
+  const hasValue = typeof value === 'string' ? value.length > 0 : false
+  return (
+    <div
+      data-search-field
+      className={cx(
+        'flex w-full items-center border bg-surface text-text transition-colors',
+        'focus-within:outline-2 focus-within:outline-offset-[-1px] focus-within:outline-focus',
+        compact ? 'h-9' : 'h-10',
+        disabled
+          ? 'border-border bg-surface-sunken text-text-muted'
+          : 'border-border-strong hover:border-rule focus-within:border-rule',
+        className,
+      )}
+    >
+      <span className="pointer-events-none flex shrink-0 items-center justify-center pl-3 text-text-muted">
+        <Glyph name="search" size={compact ? 14 : 16} />
+      </span>
+      <input
+        ref={ref}
+        type="search"
+        value={value}
+        disabled={disabled}
+        className={cx(
+          'h-full min-w-0 flex-1 border-0 bg-transparent px-2.5 text-text placeholder:text-text-muted outline-none focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:text-text-muted',
+          compact ? 'type-body-s' : 'type-body',
+        )}
+        {...rest}
+      />
+      {hasValue && onClear && !disabled ? (
+        <button
+          type="button"
+          onClick={onClear}
+          aria-label="Clear search"
+          className="flex h-full shrink-0 cursor-pointer items-center justify-center px-2.5 text-text-muted hover:text-text"
+        >
+          <Glyph name="close" size={14} />
+        </button>
+      ) : null}
+    </div>
   )
 })
 
