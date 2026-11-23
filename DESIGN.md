@@ -832,9 +832,7 @@ Charts are drawn, not illustrated. They follow the blueprint: flat, square-ended
 | `Gauge` | One share against a target | `value` (0 to 100), `target`, `label`, `tone`, `size` |
 | `Sparkline` | Inline trend shape | `data`, `tone`, `width`, `height` |
 | `ScatterPlot` | Relationship and outliers | `points` `{ x, y, label, flag? }[]`, `xLabel`, `yLabel`, `diagonal`, `flagLabel` |
-| `IndiaStateMap` | National and state deployment sites | `sites` `{ id, name, state, project, stage?, x, y, metric? }[]`, `surface` (`dark \| paper`), `selected`, `onSelect`, `code` |
-| `CityMap` | Municipal wards, highways and rail | `wards` `{ id, label, name, path, cx, cy, metric? }[]`, `highways`, `railLines`, `selected`, `onSelect`, `scaleLabel`, `code` |
-| `GisMap` | GIS parcel boundaries & live AI detections | `parcels`, `title`, `code`, `defaultBase` (`paper \| blueprint`). Search, category chips, zoom/layer stack, detection boxes + `Captured / Read / Decided` trail. |
+| `AirawatMap` | Live operations geographic map across all products | `locations` `{ id, code, title, area, lat, lng, status, live?, metricLabel?, metricValue?, areaRadiusMeters?, polygon?, details? }[]`, `center`, `zoom`, `searchable`, `showStatusFilters`, `theme` (`paper \| ink`), `onSelect` |
 | `TileMap` | Ward-level values, equal-area | `tiles` `{ id, label, row, col, value, name? }[]`, `selected`, `onSelect`, `tone` |
 | `Timeline` | Dated events on one axis | `events` `{ date, title, position (0 to 1), tone? }[]` |
 | `CompositionBar` | A whole in one line | `segments`, `format` |

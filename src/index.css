@@ -515,6 +515,69 @@
   to { transform: scaleX(0); }
 }
 
+@keyframes airawat-map-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0.9;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(3.4);
+    opacity: 0.12;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(3.8);
+    opacity: 0;
+  }
+}
+
+/* Airawat themed Leaflet map: unlayered so overrides beat leaflet/dist/leaflet.css and Tailwind Preflight */
+.leaflet-container img.leaflet-tile {
+  max-width: none !important;
+  max-height: none !important;
+}
+.airawat-map-paper .leaflet-container {
+  background: #f5f3ec;
+}
+.airawat-map-paper .leaflet-tile-pane {
+  filter: sepia(14%) saturate(85%) contrast(98%);
+}
+.airawat-map-ink .leaflet-container {
+  background: #1c2a38;
+}
+.airawat-map-ink .leaflet-tile-pane {
+  filter: invert(90%) hue-rotate(195deg) brightness(105%) contrast(94%) saturate(75%);
+}
+.airawat-map-satellite .leaflet-container {
+  background: #111111;
+}
+.airawat-map-satellite .leaflet-tile-pane {
+  filter: none;
+}
+.airawat-map-marker-root {
+  background: transparent;
+  border: none;
+}
+.airawat-map-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.airawat-map-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border-width: 1.5px;
+  border-style: solid;
+  pointer-events: none;
+  animation: airawat-map-pulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+.airawat-map-pulse-delay {
+  animation-delay: 0.9s;
+}
+
 /* SVG transform origins: scale from the element's own box */
 @utility svg-origin-bottom {
   transform-box: fill-box;

@@ -1,18 +1,16 @@
 import { useMemo, useState } from 'react'
 import {
+  AirawatMap,
   BarChart,
   Button,
   ButtonGroup,
   ChartFrame,
-  CityMap,
   CompositionBar,
   cx,
   DonutChart,
   Funnel,
   Gauge,
-  GisMap,
   Heatmap,
-  IndiaStateMap,
   LineChart,
   ScatterPlot,
   Slider,
@@ -245,68 +243,46 @@ export function ScatterSection() {
   )
 }
 
-export function MapsSection() {
-  const [site, setSite] = useState<string | null>('kanpur')
-  const [ward, setWard] = useState<string | null>('w12')
-  const [surface, setSurface] = useState<'dark' | 'paper'>('dark')
+export function MapSection() {
+  const [mapTheme, setMapTheme] = useState<'auto' | 'paper' | 'ink'>('auto')
   return (
     <Section
-      id="maps"
+      id="map"
       group={G}
-      title="Maps"
-      headline="Deployments and wards drawn"
-      accent="as schematics."
-      intro="India and state maps use white or paper outlines with lighter state borders and rose deployment rings. City maps show ward polygons in muted fills, highways in slate, rail dashed in rose, a north arrow and a scale bar."
+      title="Map"
+      headline="Live detections anchored"
+      accent="to real streets."
+      intro="One shared interactive geographic map for every Airawat product. Keyless OpenStreetMap tiles are toned to match the warm paper and dark ink themes, with animated pulse rings on live detection locations, square data tooltips, affected-area zones and an integrated search bar."
     >
-      <div className="grid gap-6 xl:grid-cols-2">
-        <ChartFrame
-          label="India and state deployment map"
-          code="MAP-IND"
-          actions={
-            <ButtonGroup
-              label="Map surface"
-              size="sm"
-              value={surface}
-              onChange={setSurface}
-              options={[
-                { value: 'dark', label: 'Dark blueprint' },
-                { value: 'paper', label: 'Paper' },
-              ]}
-            />
-          }
-          source="Airawat Programme Office · schematic outline, not to scale"
-        >
-          <IndiaStateMap surface={surface} selected={site} onSelect={(id) => setSite(site === id ? null : id)} />
-        </ChartFrame>
-
-        <ChartFrame
-          label="City ward map · Kanpur"
-          code="MAP-CITY"
-          legend={[
-            { label: 'Highways', tone: 'slate' },
-            { label: 'Rail corridor', tone: 'rose', dashed: true },
-          ]}
-          source="Municipal ward boundaries, Kanpur · schematic, not to scale"
-        >
-          <CityMap selected={ward} onSelect={(id) => setWard(ward === id ? null : id)} />
-        </ChartFrame>
-      </div>
       <ChartFrame
-        label="Kanpur GIS spatial layer · ward boundaries and live detections"
-        code="MAP-GIS-KNP"
+        label="Kanpur live operations map · multi-product detections"
+        code="VIZ-MAP"
         status="Live detections"
-        source="Kanpur Nagar Nigam GIS register & Sentinel-2 orthophoto · drag to pan · tags illustrative"
+        actions={
+          <ButtonGroup
+            label="Map surface theme"
+            size="sm"
+            value={mapTheme}
+            onChange={setMapTheme}
+            options={[
+              { value: 'auto', label: 'Match page' },
+              { value: 'paper', label: 'Paper' },
+              { value: 'ink', label: 'Ink' },
+            ]}
+          />
+        }
+        source="OpenStreetMap contributors · live detection tags and readings are illustrative"
       >
-        <GisMap />
+        <AirawatMap theme={mapTheme === 'auto' ? undefined : mapTheme} />
       </ChartFrame>
 
       <Rules
         title="Map rules"
         items={[
-          'India and state maps: white or paper outlines, state borders lighter, deployment sites as rings with a dot in rose-light on dark or rose on paper.',
-          'City maps: ward polygons in a muted fill, highways in slate, rail dashed in rose, with a north arrow and a scale bar.',
-          'GIS maps: map parcel status strictly onto the five brand colours and their solid washes (never bright neon red, green, or purple). Annotate live detections with thin white or ink boxes, small paper label tags (Detection, Confidence), and a Captured / Read / Decided evidence trail.',
-          'Every map sits inside a frame with a reference code and a source line, and names the selected site, ward, or parcel in words.',
+          'Use keyless OpenStreetMap tiles toned with the Airawat paper or ink filter. Never require API-key-gated tiles.',
+          'Show live detections with square brand-coloured markers and an expanding pulse animation at the exact location or area zone.',
+          'Hovering or selecting a marker displays a 0px data tooltip with status word, code, key metric, coordinates and timestamp. Never rely on colour alone.',
+          'The floating search bar uses the composite focus-within pattern (no nested inner focus border) and flies directly to matching locations.',
         ]}
       />
     </Section>
@@ -389,7 +365,7 @@ export function Visualisation() {
       <HeatmapSection />
       <GaugeSection />
       <ScatterSection />
-      <MapsSection />
+      <MapSection />
       <TileMapSection />
       <TimelineSection />
       <CompositionSection />

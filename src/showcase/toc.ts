@@ -64,7 +64,7 @@ export const toc = [
       ['heatmap', 'Heatmap'],
       ['gauge', 'Gauge and sparkline'],
       ['scatter', 'Scatter plot'],
-      ['maps', 'Maps'],
+      ['map', 'Map'],
       ['tilemap', 'Ward tile map'],
       ['timeline', 'Timeline'],
       ['composition', 'Composition bar'],

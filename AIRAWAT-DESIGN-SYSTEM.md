@@ -692,47 +692,17 @@ components:
   live-indicator:
     squareSize: 6px
     typography: "{typography.label}"
-  india-state-map:
-    backgroundColor: "{colors.surface-dark}"
-    backgroundImage: "{gradients.blueprint-panel}"
-    outlineColor: "{colors.paper}"
-    stateBorderColor: "{colors.grid-major}"
-    deploymentSiteOnDark: "{colors.rose-light}"
-    deploymentSiteOnPaper: "{colors.rose}"
-    labelTypography: "{typography.caption}"
-    rounded: "{rounded.none}"
-  city-map:
-    backgroundColor: "{colors.surface}"
-    wardFill: "{colors.surface-raised}"
-    wardSelectedFill: "{colors.slate-wash}"
-    wardBorderColor: "{colors.border-strong}"
-    highwayColor: "{colors.slate}"
-    railColor: "{colors.rose}"
-    railStyle: "dashed (6 4)"
-    northArrowColor: "{colors.ink}"
-    scaleBarColor: "{colors.ink}"
-    labelTypography: "{typography.caption}"
-    rounded: "{rounded.none}"
-  gis-map:
-    backgroundColor: "{colors.paper}"
-    blueprintBackground: "{gradients.blueprint-panel}"
-    toolbarBackground: "{colors.surface-raised}"
-    controlBorderColor: "{colors.rule}"
-    parcelGapFill: "{colors.rose-wash}"
-    parcelGapStroke: "{colors.rose-deep}"
-    parcelPspclFill: "{colors.rose-tint}"
-    parcelPspclStroke: "{colors.rose}"
-    parcelTaxNetFill: "{colors.sage-wash}"
-    parcelTaxNetStroke: "{colors.sage-dark}"
-    parcelModifiedFill: "{colors.slate-wash}"
-    parcelModifiedStroke: "{colors.slate-deep}"
-    parcelExemptFill: "{colors.surface-sunken}"
-    parcelExemptStroke: "{colors.text-muted}"
-    detectionBoxStrokeOnDark: "{colors.white}"
-    detectionBoxStrokeOnPaper: "{colors.ink}"
-    detectionTagBackground: "{colors.paper}"
-    detectionTagText: "{colors.ink}"
-    detectionTagTypography: "{typography.label}"
+  airawat-map:
+    tileProvider: "Esri World Street Map (street view) + Esri World Imagery & Boundaries/Places (satellite view) — keyless, full street-level detail up to zoom 19"
+    paperTileFilter: "sepia(14%) saturate(85%) contrast(98%)"
+    inkTileFilter: "invert(90%) hue-rotate(195deg) brightness(105%) contrast(94%) saturate(75%)"
+    satelliteTileFilter: "none (evidence imagery shown in true colour per Brand Guide V2)"
+    liveDetectionPulse: "expanding square radar ring (@keyframes airawat-map-pulse) in status colour (critical rose-deep/rose-light, caution rose/rose-light, info slate-deep/slate-light, resolved sage-dark/sage)"
+    tooltipBackground: "{colors.surface}"
+    tooltipBorder: "1px solid {colors.rule}"
+    tooltipShadow: "none"
+    searchBar: "SearchInput (data-search-field, outer :focus-within ring, inner input outline: none)"
+    controlsBorder: "1px solid {colors.rule}"
     rounded: "{rounded.none}"
 ---
 
@@ -1403,9 +1373,92 @@ Motion has three jobs: **Orient** (menus, drawers), **Confirm** (toasts, settled
 - **`DataTable`, `Pagination`, `DescriptionList`**: Sortable, selectable tables (44px min rows, sticky bulk bar, row click opens `Drawer`), square mono pagination, and key/value record sheets.
 - **`Calendar`, `DatePicker`, `DateRangePicker`**: Monday-start square grids with 6px module event squares and `DD Mon YYYY` formatting.
 - **`MetricCard`, `ActivityFeed`, `LiveIndicator`**: Sourced KPI tiles with flat sparklines, decision-trail feeds, and pulsing-square live status.
-- **`IndiaStateMap`, `CityMap` & `GisMap` (`src/ds/Map.tsx`, `src/ds/GisMap.tsx`)**: Schematic and GIS map components following Brand Guide V2 (Pages 11 and 14). `IndiaStateMap` supports `dark` (blueprint grid with `paper` outlines, lighter state borders, and `rose-light` ring-and-dot deployment sites) and `paper` (`ink` outlines and `rose` deployment rings). `CityMap` renders muted ward polygons (`surface-raised`, selected `slate-wash`), `slate` highways, dashed `rose` rail lines, a North arrow, and a scale bar. `GisMap` renders an interactive Kanpur municipal GIS layer (Ganga river, NH-19 GT Road, VIP Road, Kanpur Central rail, 6 dashed municipal ward boundaries, dense urban footprint blocks, and clickable property parcels mapped strictly to the five brand colours: `rose-deep`/`rose-wash` for Suspected Gap, `rose`/`rose-tint` for Occupied KESCO, `sage-dark`/`sage-wash` for In Tax Net, `slate-deep`/`slate-wash` for New / Modified, `surface-sunken` for Exempt) with floating top-left search and category filter chips, drag-to-pan, right-side vertical zoom/recenter/layer controls (`Paper` / `Blueprint`), live AI detection overlays (thin white/ink boxes + `paper` `label` tags with confidence), and a `Captured / Read / Decided` evidence trail. All maps wrap inside `ChartFrame` with a reference code and source line.
+- **`AirawatMap` (`src/ds/AirawatMap.tsx`)**: Shared interactive Leaflet geographic map used across all nine Airawat products. Renders keyless Esri World Street Map (toned to Paper Light and Ink Dark themes with full street-level detail up to zoom 18) plus a **Street / Satellite** view switch (Esri World Imagery + Boundaries & Places in true colour per Brand Guide V2), animated expanding pulse rings on live detection locations and affected-area zones, viewport-clamped `0px` data tooltips (status word, code, title, area, key metric, telemetry details, coordinates, timestamp), a top toolbar composite `SearchInput` (with live dropdown and `flyTo` selection), status filter chips, and square zoom/fit/zone controls.
 - **`ProgressBar`, `SegmentedProgress`, `Stepper`, `ProgressRing`**: Flat square-ended progress bars and numbered workflow steppers.
 - **`EmptyState`, `Skeleton`, `ErrorState`, `OfflineState`, `Loading`**: Structured states paired with their semantic heritage motifs (Vastu, Baoli, Kolam).
+
+### Shared Geographic Map (`AirawatMap`, `src/ds/AirawatMap.tsx`)
+
+One shared interactive geographic map built on Leaflet for all nine Airawat products (PGR, VMS, Property Tax, Expenditure, Air Quality, Floods, Bridges & Infrastructure, Waste, Energy, Water). It adapts automatically to Paper (Light) and Ink (Dark) themes, includes a **Street / Satellite** view switch, animates live detections with a radar pulse ring at the exact location or area zone, shows viewport-clamped data tooltips, and provides a top-bar composite search input.
+
+**Data & Props Contract:**
+
+```ts
+export type MapDetectionStatus = 'critical' | 'caution' | 'info' | 'resolved'
+export type MapViewMode = 'street' | 'satellite'
+
+export type AirawatMapLocation = {
+  id: string
+  code: string
+  title: string
+  area: string
+  lat: number
+  lng: number
+  status: MapDetectionStatus
+  live?: boolean               // Renders expanding square radar pulse rings
+  category?: string
+  metricLabel?: string
+  metricValue?: string
+  confidence?: number
+  timestamp?: string
+  areaRadiusMeters?: number    // Optional circular affected-area zone
+  polygon?: [number, number][] // Optional ward/sector polygon boundary
+  details?: { label: string; value: string }[]
+}
+
+export type AirawatMapProps = {
+  locations?: AirawatMapLocation[]
+  center?: [number, number]
+  zoom?: number
+  height?: number
+  searchable?: boolean
+  searchPlaceholder?: string
+  showStatusFilters?: boolean
+  selectedId?: string | null
+  onSelect?: (location: AirawatMapLocation | null) => void
+  theme?: 'paper' | 'ink'      // Defaults to global Paper / Ink theme
+  defaultView?: MapViewMode    // 'street' | 'satellite'
+  tileUrl?: string
+  className?: string
+}
+```
+
+**Keyless Tile Sources (Never Use API-Key-Gated Tiles):**
+- **Street view:** `https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}` (`maxNativeZoom: 18`, `maxZoom: 19`) for full street, road-name, park, river, and locality detail in both Paper and Ink modes.
+- **Satellite view:** `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}` paired with `https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}` shown in true colour (`filter: none`), matching Brand Guide V2 Page 12.
+
+**Required CSS (Unlayered so Leaflet & Tailwind Preflight Do Not Conflict):**
+
+```css
+@keyframes airawat-map-pulse {
+  0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.9; }
+  70% { transform: translate(-50%, -50%) scale(3.4); opacity: 0.12; }
+  100% { transform: translate(-50%, -50%) scale(3.8); opacity: 0; }
+}
+
+.leaflet-container img.leaflet-tile { max-width: none !important; max-height: none !important; }
+.airawat-map-paper .leaflet-container { background: #f5f3ec; }
+.airawat-map-paper .leaflet-tile-pane { filter: sepia(14%) saturate(85%) contrast(98%); }
+.airawat-map-ink .leaflet-container { background: #1c2a38; }
+.airawat-map-ink .leaflet-tile-pane { filter: invert(90%) hue-rotate(195deg) brightness(105%) contrast(94%) saturate(75%); }
+.airawat-map-satellite .leaflet-container { background: #111111; }
+.airawat-map-satellite .leaflet-tile-pane { filter: none; }
+.airawat-map-marker-root { background: transparent; border: none; }
+.airawat-map-marker { position: relative; display: flex; align-items: center; justify-content: center; }
+.airawat-map-pulse {
+  position: absolute; top: 50%; left: 50%; width: 100%; height: 100%;
+  border-width: 1.5px; border-style: solid; pointer-events: none;
+  animation: airawat-map-pulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+.airawat-map-pulse-delay { animation-delay: 0.9s; }
+```
+
+**Mandatory Implementation Guardrails:**
+1. **Import `leaflet/dist/leaflet.css` in TypeScript/JS** (`import 'leaflet/dist/leaflet.css'`), never via CSS `@import` inside a Tailwind v4 stylesheet.
+2. **Never put dynamic React `className` on the Leaflet mount `<div>`.** Apply `airawat-map-paper`, `airawat-map-ink`, and `airawat-map-satellite` on a parent wrapper so React never overwrites Leaflet's `leaflet-container` and `leaflet-fade-anim` classes when switching themes or views.
+3. **Toolbar separation:** Place the composite `SearchInput`, **Street / Satellite** toggle, and status filter chips (`All`, `Live detections`, `Critical`, `Caution`, `Notice`, `Resolved`) in a dedicated `bg-surface-raised border-b border-border` strip above the map viewport so controls never collide with markers or tooltips.
+4. **Viewport-clamped data tooltips:** Render hover data tooltips as a `0px` React overlay positioned with `map.latLngToContainerPoint` and clamped inside all four edges of the viewport (`z-[650]`). Never set an HTML `title` attribute on Leaflet markers (use `alt` only) so the browser never renders a second native OS tooltip.
+5. **Status colour mapping:** Map markers, pulse rings, and area zones strictly onto the five brand colours: `critical` (`#7E4554` paper / `#C99AA2` ink), `caution` (`#9A5B6A` / `#C99AA2`), `info` (`#2F4E6D` / `#9BB3CC`), and `resolved` (`#4F5D50` / `#B8C3B9`). Always show the status word alongside colour.
 
 ---
 
